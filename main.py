@@ -3,6 +3,7 @@
 # Create CRUD for each model.
 # Create views which call the API, keep back-end and front-end seperate.
 
+from datetime import datetime
 import os
 import aiofiles
 
@@ -37,14 +38,16 @@ class UserModel(BaseModel):
     name: str = Field(...)
     user_name: str = Field(...)
     password: str = Field(...)
-    #content_assigned: Optional[List[int]] = None
-    #content_completed: Optional[List[int]] = None
+    content_assigned: Optional[List[str]] = None
+    content_completed: Optional[List[str]] = None
     model_config = ConfigDict(populate_by_name=True, arbitrary_types_allowed=True)
 
 class UpdateUserModel(BaseModel):
     name: Optional[str] = None
     user_name: Optional[str] = None
     password: Optional[str] = None
+    content_assigned: Optional[List[str]] = None
+    content_completed: Optional[List[str]] = None
     model_config = ConfigDict(arbitrary_types_allowed=True, json_encoders={ObjectId: str})
 
 
@@ -52,7 +55,7 @@ class UpdateUserModel(BaseModel):
 class UserCollection(BaseModel):
     users: List[UserModel]
 
-# User Endpoints
+# Individual CRUD User Endpoints
 
 @app.post("/users", response_description="Create a User", response_model=UserModel, status_code=status.HTTP_201_CREATED, response_model_by_alias=False)
 async def create_user(user: UserModel = Body(...)):
@@ -72,12 +75,17 @@ async def get_user(id: str):
      else:
         raise HTTPException(status_code=404, detail=f"User {id} not found")
 
-@app.put("/user{id}", response_description="Update a user.", response_model=UserModel, response_model_by_alias=False)
+
+# Put for updating Content completed or content assigned.
+# Always Put the date completed, if available put the quiz score as well.
+@app.put("/user/{id}", response_description="Update a user's assigned or completed content. This method can also be used to change user details.", response_model=UserModel, response_model_by_alias=False)
 async def update_user(id: str):
     ...
 @app.delete("/user/{id}", response_description="Delete user", response_model=UserModel, response_model_by_alias=False)
 async def delete_user(id: str):
     ...
+
+# Multiple Users 
 
 @app.get("/users", response_description="List all Users", response_model=UserCollection, response_model_by_alias=False,)
 async def get_users():
@@ -85,7 +93,7 @@ async def get_users():
 
 
 
-# Video Endpoints
+# Individual Video Endpoints
 
 @app.post("/video", response_description="Upload a video file.")
 async def upload_video(file: UploadFile=File(...), name = Body(...)):
@@ -107,9 +115,10 @@ def update_video(id: str):
 def delete_video(id: str):
     ...
 
+
+# Multiple Videos
 @app.get("/videos", response_description="Get a list of all the videos.")
 def get_videos():
     ...
 
 
-# Logging Endpoints
