@@ -59,6 +59,7 @@ class UserCollection(BaseModel):
 
 # Individual CRUD User Endpoints
 
+# Create a user.
 @app.post("/users", response_description="Create a User", response_model=UserModel, status_code=status.HTTP_201_CREATED, response_model_by_alias=False)
 async def create_user(user: UserModel = Body(...)):
     try:
@@ -69,7 +70,8 @@ async def create_user(user: UserModel = Body(...)):
     except errors.DuplicateKeyError:
         raise HTTPException(status_code=409, detail="Username is taken.")
 
-    
+
+# Get a specific user.    
 @app.get("/user/{id}", response_description="List a single User.", response_model=UserModel, response_model_by_alias=False)
 async def get_user(id: str):
      if (user := await user_collection.find_one({"_id": ObjectId(id)})) is not None:
@@ -100,13 +102,15 @@ async def update_user_content(id:str, vid:str, user:UpdateUserModel = Body(...))
 
 # Add content to a user's completed content.    
 
-@app.put("/user/{id}/content/{vid}", response_description="Add content to a user's completed content.", response_model=UserModel, response_model_by_alias=False)
+@app.put("/user/{id}/content/{vid}/c", response_description="Add content to a user's completed content.", response_model=UserModel, response_model_by_alias=False)
 async def update_user_content(id:str, vid:str, user:UpdateUserModel = Body(...)):
     user = {k: v for k, v in user.model_dump(by_alias=True).items() if v is not None}
+
+    # Video ID + Date
     if(len(user) > 1):
         update_result = await user_collection.find_one_and_update(
             {"_id": ObjectId(id)},
-            {"$push": { "content_completed":vid }}
+            {"$push": { "content_completed":f"{datetime.now()}"+vid }}
         )
     if update_result is not None:
         return update_result
@@ -117,25 +121,84 @@ async def update_user_content(id:str, vid:str, user:UpdateUserModel = Body(...))
     
     raise HTTPException(status_code=404, detail=f"User {id} not found.")
 
-# Put for updating Content completed or content assigned.
-# Always Put the date completed, if available put the quiz score as well.
-# The user should only be allowed to update the contentCompleted field. Only the admin can change user details such as user name, password, name, and rle.
-@app.put("/user/{id}", response_description="Completely overwrites a user if any field is empty.", response_model=UserModel, response_model_by_alias=False)
-async def update_user(id: str, user: UpdateUserModel = Body(...)):
+# Change a user's name.
+@app.put("/user/{id}/cn/{name}", response_description="Change a user's user name.", response_model=UserModel, response_model_by_alias=False)
+async def update_user_content(id:str, name:str, user:UpdateUserModel = Body(...)):
     user = {k: v for k, v in user.model_dump(by_alias=True).items() if v is not None}
 
+    # Video ID + Date
     if(len(user) > 1):
-     update_result = await user_collection.find_one_and_update(
+        update_result = await user_collection.find_one_and_update(
             {"_id": ObjectId(id)},
-            {"$set": user},
-            return_document=ReturnDocument.AFTER,
+            {"$set": {"name":name}}
         )
-     if update_result is not None:
-         return update_result
-     else:
-         raise HTTPException(status_code=404, detail=f"User {id} not found.")
+    if update_result is not None:
+        return update_result
+    else:
+        raise HTTPException(status_code=404, detail=f"User {id} not found.")
     if(existing_user := await user_collection.find_one({"_id": id})) is not None:
-       return existing_user
+        return existing_user
+    
+    raise HTTPException(status_code=404, detail=f"User {id} not found.")
+# Change a user's user name.
+
+@app.put("/user/{id}/cu/{user_name}", response_description="Change a user's user name.", response_model=UserModel, response_model_by_alias=False)
+async def update_user_content(id:str, user_name:str, user:UpdateUserModel = Body(...)):
+    user = {k: v for k, v in user.model_dump(by_alias=True).items() if v is not None}
+
+    # Video ID + Date
+    if(len(user) > 1):
+        update_result = await user_collection.find_one_and_update(
+            {"_id": ObjectId(id)},
+            {"$set": {"user_name":user_name}}
+        )
+    if update_result is not None:
+        return update_result
+    else:
+        raise HTTPException(status_code=404, detail=f"User {id} not found.")
+    if(existing_user := await user_collection.find_one({"_id": id})) is not None:
+        return existing_user
+    
+    raise HTTPException(status_code=404, detail=f"User {id} not found.")
+
+# Change a user's password.
+
+@app.put("/user/{id}/pc/{password}", response_description="Change a user's password.", response_model=UserModel, response_model_by_alias=False)
+async def update_user_content(id:str, password:str, user:UpdateUserModel = Body(...)):
+    user = {k: v for k, v in user.model_dump(by_alias=True).items() if v is not None}
+
+    # Video ID + Date
+    if(len(user) > 1):
+        update_result = await user_collection.find_one_and_update(
+            {"_id": ObjectId(id)},
+            {"$set": {"password":password}}
+        )
+    if update_result is not None:
+        return update_result
+    else:
+        raise HTTPException(status_code=404, detail=f"User {id} not found.")
+    if(existing_user := await user_collection.find_one({"_id": id})) is not None:
+        return existing_user
+    
+    raise HTTPException(status_code=404, detail=f"User {id} not found.")
+
+# Change a user's role
+@app.put("/user/{id}/cr/{role}", response_description="Change a user's role.", response_model=UserModel, response_model_by_alias=False)
+async def update_user_content(id:str, role:str, user:UpdateUserModel = Body(...)):
+    user = {k: v for k, v in user.model_dump(by_alias=True).items() if v is not None}
+
+    # Video ID + Date
+    if(len(user) > 1):
+        update_result = await user_collection.find_one_and_update(
+            {"_id": ObjectId(id)},
+            {"$set": {"role":role}}
+        )
+    if update_result is not None:
+        return update_result
+    else:
+        raise HTTPException(status_code=404, detail=f"User {id} not found.")
+    if(existing_user := await user_collection.find_one({"_id": id})) is not None:
+        return existing_user
     
     raise HTTPException(status_code=404, detail=f"User {id} not found.")
 
