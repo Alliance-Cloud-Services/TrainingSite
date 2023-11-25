@@ -10,8 +10,8 @@ import aiofiles
 from typing import Optional, List
 
 from fastapi import FastAPI, Body, File, HTTPException, status, UploadFile
-from fastapi.responses import Response, StreamingResponse, FileResponse
-from pydantic import ConfigDict, BaseModel, Field, EmailStr
+from fastapi.responses import HTMLResponse, FileResponse
+from pydantic import ConfigDict, BaseModel, Field
 from pydantic.functional_validators import BeforeValidator
 
 
@@ -29,6 +29,7 @@ client = motor.motor_asyncio.AsyncIOMotorClient("127.0.0.1:27017")
 db = client.train
 user_collection = db.get_collection('users')
 
+vid_collection = db.get_collection("vids")
 # Represents an ObjectId field in the database.
 # It will be represented as a `str` on the model so that it can be serialized to JSON.
 PyObjectId = Annotated[str, BeforeValidator(str)]
@@ -56,6 +57,8 @@ class UpdateUserModel(BaseModel):
 # https://haacked.com/archive/2009/06/25/json-hijacking.aspx/
 class UserCollection(BaseModel):
     users: List[UserModel]
+
+
 
 # Individual CRUD User Endpoints
 
@@ -214,33 +217,78 @@ async def get_users():
 
 
 
+
+class VidModel(BaseModel):
+    id: Optional[PyObjectId] = Field(alias="_id", default=None)
+    name: str = Field(...)
+    file_name: str = Field(...)
+
 # Individual Video Endpoints
 
+
+
+
+
+
+# Create a user.
+@app.post("/users", response_description="Create a User", response_model=UserModel, status_code=status.HTTP_201_CREATED, response_model_by_alias=False)
+async def create_user(user: UserModel = Body(...)):
+    try:
+        new_user = await user_collection.insert_one(user.model_dump(by_alias=True, exclude=["id"]))
+
+        created_user = await user_collection.find_one({"_id": new_user.inserted_id})
+        return created_user
+    except errors.DuplicateKeyError:
+        raise HTTPException(status_code=409, detail="Username is taken.")
+
+
+
 @app.post("/video", response_description="Upload a video file.")
-async def upload_video(file: UploadFile=File(...), name = Body(...)):
-    async with aiofiles.open(os.path.join("./", name), 'wb') as out_vid:
+async def upload_video(file: UploadFile=File(...), name:str = Body(...)):
+
+    # Write the file to disk.
+    async with aiofiles.open(os.path.join("./vids", name), 'wb') as out_vid:
         content = await file.read()
         await out_vid.write(content)
-    return { "filename": file.filename }
+    return {"filename": file.filename}
+
+    # # Add the video name to the database.
+    # try:
+    #     new_video = await vid_collection.insert_one(vid.model_dump(by_alias=True, exclude=["id"]))
+
+    #     created_vid = await vid_collection.find_one({"_id": created_vid.inserted_id})
+    #     return created_vid
+    # except errors.DuplicateKeyError:
+    #     raise HTTPException(status_code=409, detail="Video with name already exists!")
 
 
+# Return a single video file.
 @app.get("/video/{id}", response_description="Get a specific video file.", response_class=FileResponse)
 def stream_video(id: str):
-  return os.path.join("./", id)
+  return os.path.join("./vids/", id)
 
-@app.put("/video/{id}", response_description="Change a video name.")
-def update_video(id: str):
-    ...
-
-@app.delete("/video/{id}", response_description="Delete a video.")
-def delete_video(id: str):
-    ...
-
-
-# Multiple Videos
+#  Return a list of all videos on the server.
 @app.get("/videos", response_description="Get a list of all the videos.")
-def get_videos():
-    ...
+async def get_videos():
+   
+    videos = []
+    vid_dir = os.path.join("./", "vids")
+    for vid in os.scandir(vid_dir):
+       if vid.is_file():
+        videos.append(vid.name)
+    return {"vids": videos}
 
 
-# TODO Add individual endpoints fo r
+@app.get("/", response_description="Get the homepage.", response_class=HTMLResponse)
+def homepage():
+    return """
+        <html>
+            <head>
+                <title>Homepage</title>
+            </head>
+            <body>
+                <video src="/video/Bunny Safety.mp4" controls></video>
+            </body>
+        </html>
+        """
+
