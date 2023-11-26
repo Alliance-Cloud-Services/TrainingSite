@@ -1,7 +1,7 @@
 # Import required modules.
-# Create database models. 
+# Create database models.
 # Create CRUD for each model.
-# Create views which call the API, keep back-end and front-end seperate.
+# Create views which call the API, keep back-end and front-end separate.
 
 from datetime import datetime
 import os
@@ -9,8 +9,9 @@ import aiofiles
 
 from typing import Optional, List
 
-from fastapi import FastAPI, Body, File, HTTPException, status, UploadFile
+from fastapi import FastAPI, Body, File, HTTPException, status, UploadFile, Request, Header
 from fastapi.responses import HTMLResponse, FileResponse
+from fastapi.templating import Jinja2Templates
 from pydantic import ConfigDict, BaseModel, Field
 from pydantic.functional_validators import BeforeValidator
 
@@ -24,8 +25,10 @@ from pymongo import ReturnDocument, errors
 
 
 app = FastAPI(title="Training Module API", summary="The back-end for the training module allowing users to retrieve videos and admins to manage videos and users.")
-client = motor.motor_asyncio.AsyncIOMotorClient("127.0.0.1:27017")
+templates = Jinja2Templates(directory="templates")
 
+
+client = motor.motor_asyncio.AsyncIOMotorClient("127.0.0.1:27017")
 db = client.train
 user_collection = db.get_collection('users')
 
@@ -213,7 +216,8 @@ async def delete_user(id: str):
 
 @app.get("/users", response_description="List all Users", response_model=UserCollection, response_model_by_alias=False,)
 async def get_users():
-    return UserCollection(users = await user_collection.find().to_list(1000))
+    users = await user_collection.find().to_list(1000)
+    return users
 
 
 
@@ -270,7 +274,6 @@ def stream_video(id: str):
 #  Return a list of all videos on the server.
 @app.get("/videos", response_description="Get a list of all the videos.")
 async def get_videos():
-   
     videos = []
     vid_dir = os.path.join("./", "vids")
     for vid in os.scandir(vid_dir):
@@ -278,17 +281,19 @@ async def get_videos():
         videos.append(vid.name)
     return {"vids": videos}
 
+# View for list of users.
+@app.get("/v/users", response_description="Get a list of users", response_class=HTMLResponse)
+async def homepage(request: Request, hx_request: Optional[str] = Header(None)):
+    users =  await user_collection.find().to_list(1000)
+    context = {"request": request, "users": users}
+    # If the button to reload is pressed don't reload the whole page, only the table.
+    if hx_request:
+        return templates.TemplateResponse("table.html", context)
+    return templates.TemplateResponse("users.html", context)
 
-@app.get("/", response_description="Get the homepage.", response_class=HTMLResponse)
-def homepage():
-    return """
-        <html>
-            <head>
-                <title>Homepage</title>
-            </head>
-            <body>
-                <video src="/video/Bunny Safety.mp4" controls></video>
-            </body>
-        </html>
-        """
+# Index
 
+@ app.get("/", response_description="Get the homepage.", response_class=HTMLResponse)
+async def index(request: Request):
+    context = {"request": request}
+    return templates.TemplateResponse("index.html", context)

@@ -1,0 +1,11 @@
+{
+    "cSpell.words": [
+        "aiofiles",
+        "bson",
+        "fastapi",
+        "pydantic",
+        "pymongo",
+        "scandir",
+        "templating"
+    ]
+}
