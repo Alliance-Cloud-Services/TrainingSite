@@ -77,7 +77,7 @@ async def create_user(user: UserModel = Body(...)):
         raise HTTPException(status_code=409, detail="Username is taken.")
 
 
-# Get a specific user.    
+# Get a specific user.
 @app.get("/user/{id}", response_description="List a single User.", response_model=UserModel, response_model_by_alias=False)
 async def get_user(id: str):
      if (user := await user_collection.find_one({"_id": ObjectId(id)})) is not None:
@@ -102,11 +102,10 @@ async def update_user_content(id:str, vid:str, user:UpdateUserModel = Body(...))
         raise HTTPException(status_code=404, detail=f"User {id} not found.")
     if(existing_user := await user_collection.find_one({"_id": id})) is not None:
         return existing_user
-    
     raise HTTPException(status_code=404, detail=f"User {id} not found.")
 
 
-# Add content to a user's completed content.    
+# Add content to a user's completed content.
 
 @app.put("/user/{id}/content/{vid}/c", response_description="Add content to a user's completed content.", response_model=UserModel, response_model_by_alias=False)
 async def update_user_content(id:str, vid:str, user:UpdateUserModel = Body(...)):
@@ -124,7 +123,6 @@ async def update_user_content(id:str, vid:str, user:UpdateUserModel = Body(...))
         raise HTTPException(status_code=404, detail=f"User {id} not found.")
     if(existing_user := await user_collection.find_one({"_id": id})) is not None:
         return existing_user
-    
     raise HTTPException(status_code=404, detail=f"User {id} not found.")
 
 # Change a user's name.
@@ -144,7 +142,6 @@ async def update_user_content(id:str, name:str, user:UpdateUserModel = Body(...)
         raise HTTPException(status_code=404, detail=f"User {id} not found.")
     if(existing_user := await user_collection.find_one({"_id": id})) is not None:
         return existing_user
-    
     raise HTTPException(status_code=404, detail=f"User {id} not found.")
 # Change a user's user name.
 
@@ -164,7 +161,6 @@ async def update_user_content(id:str, user_name:str, user:UpdateUserModel = Body
         raise HTTPException(status_code=404, detail=f"User {id} not found.")
     if(existing_user := await user_collection.find_one({"_id": id})) is not None:
         return existing_user
-    
     raise HTTPException(status_code=404, detail=f"User {id} not found.")
 
 # Change a user's password.
@@ -185,7 +181,6 @@ async def update_user_content(id:str, password:str, user:UpdateUserModel = Body(
         raise HTTPException(status_code=404, detail=f"User {id} not found.")
     if(existing_user := await user_collection.find_one({"_id": id})) is not None:
         return existing_user
-    
     raise HTTPException(status_code=404, detail=f"User {id} not found.")
 
 # Change a user's role
@@ -205,14 +200,13 @@ async def update_user_content(id:str, role:str, user:UpdateUserModel = Body(...)
         raise HTTPException(status_code=404, detail=f"User {id} not found.")
     if(existing_user := await user_collection.find_one({"_id": id})) is not None:
         return existing_user
-    
     raise HTTPException(status_code=404, detail=f"User {id} not found.")
 
 @app.delete("/user/{id}", response_description="Delete user", response_model=UserModel, response_model_by_alias=False)
 async def delete_user(id: str):
     ...
 
-# Multiple Users 
+# Multiple Users
 
 @app.get("/users", response_description="List all Users", response_model=UserCollection, response_model_by_alias=False,)
 async def get_users():
