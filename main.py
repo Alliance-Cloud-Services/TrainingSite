@@ -10,7 +10,7 @@ import aiofiles
 from typing import Optional, List
 
 from fastapi import FastAPI, Body, File, HTTPException, status, UploadFile, Request, Header, Form
-from fastapi.responses import HTMLResponse, FileResponse
+from fastapi.responses import HTMLResponse, FileResponse, RedirectResponse
 from fastapi.templating import Jinja2Templates
 from pydantic import ConfigDict, BaseModel, Field
 from pydantic.functional_validators import BeforeValidator
@@ -42,6 +42,7 @@ class UserModel(BaseModel):
     name: str = Field(...)
     role: str = Field(...)
     user_name: str = Field(...)
+    email: str = Field(...)
     password: str = Field(...)
     content_assigned: Optional[List[str]] = None
     content_completed: Optional[List[str]] = None
@@ -51,6 +52,7 @@ class UpdateUserModel(BaseModel):
     name: Optional[str] = None
     role: Optional[str] = None
     user_name: Optional[str] = None
+    email: Optional[str] = None
     password: Optional[str] = None
     content_assigned: Optional[List[str]] = None
     content_completed: Optional[List[str]] = None
@@ -97,7 +99,7 @@ async def update_user_content(id:str, vid:Annotated[str, Form()]):
             {"$push": { "content_assigned": vid}}
         )
     if update_result is not None:
-        return update_result
+        return RedirectResponse(f"/v/user/{id}", status_code=status.HTTP_302_FOUND)
     else:
         raise HTTPException(status_code=404, detail=f"User {id} not found.")
     # if(existing_user := await user_collection.find_one({"_id": id})) is not None:
@@ -105,7 +107,7 @@ async def update_user_content(id:str, vid:Annotated[str, Form()]):
     # raise HTTPException(status_code=404, detail=f"User {id} not found.")
 
 
-# Add content to a user's completed content.
+# Add content to a user's completed content and remove from assigned.
 
 @app.put("/user/{id}/content/{vid}/c", response_description="Add content to a user's completed content.", response_model=UserModel, response_model_by_alias=False)
 async def update_user_content(id:str, vid:str, user:UpdateUserModel = Body(...)):
