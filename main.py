@@ -77,10 +77,10 @@ async def create_user(user: UserModel = Body(...)):
         raise HTTPException(status_code=409, detail="Username is taken.")
 
 
-# Get a specific user.
+# Get a specific user by user name.
 @app.get("/user/{id}", response_description="List a single User.", response_model=UserModel, response_model_by_alias=False)
 async def get_user(id: str):
-     if (user := await user_collection.find_one({"_id": ObjectId(id)})) is not None:
+     if (user := await user_collection.find_one({"user_name": id})) is not None:
         return user
      else:
         raise HTTPException(status_code=404, detail=f"User {id} not found.")
@@ -275,6 +275,17 @@ async def get_videos():
         videos.append(vid.name)
     return {"vids": videos}
 
+
+# View for a single user
+@app.get("/v/user/{id}", response_description="Get a single user.", response_class=HTMLResponse)
+async def user_view(request: Request, id: str):
+    user = await user_collection.find_one({"user_name": id})
+    context = {"request": request, "user": user}
+    if user is not None:
+        return templates.TemplateResponse("user.html", context)
+    else:
+        raise HTTPException(status_code=404, detail=f"User {id} not found.")
+
 # View for list of users.
 @app.get("/v/users", response_description="Get a list of users", response_class=HTMLResponse)
 async def homepage(request: Request, hx_request: Optional[str] = Header(None)):
@@ -282,15 +293,17 @@ async def homepage(request: Request, hx_request: Optional[str] = Header(None)):
     context = {"request": request, "users": users}
     # If the button to reload is pressed don't reload the whole page, only the table.
     if hx_request:
-        return templates.TemplateResponse("table.html", context)
+        return templates.TemplateResponse("users_table.html", context)
     return templates.TemplateResponse("users.html", context)
 
-# Index
+# Homepage view
 
 @ app.get("/", response_description="Get the homepage.", response_class=HTMLResponse)
 async def index(request: Request):
     context = {"request": request}
     return templates.TemplateResponse("index.html", context)
+
+# Video view
 
 @ app.get("/v/vid/{id}", response_description="Get a video to view.", response_class=HTMLResponse)
 async def get_video(request: Request, id: str):
