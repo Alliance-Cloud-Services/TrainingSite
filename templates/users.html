@@ -27,9 +27,12 @@
                 </thead>
                 <tbody class="text-center text-sm" id="table-body">
                       {% include 'users_table.html' %}
+                      <tr class="border">
+                        <button class="px-3 py-1 bg-blue-600 text-white mb-2" hx-get="/v/users" hx-target="#table-body">Refresh Users</button>
+                     </tr>
                 </tbody>
+
             </table>
-            <button class="px-3 py-1 bg-blue-600 text-white ml-4" hx-get="/v/users" hx-target="#table-body">Load Users</button>
         </div>
     </body>
 </html>

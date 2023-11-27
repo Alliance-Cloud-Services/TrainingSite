@@ -7,6 +7,6 @@
     <td class="border"><ul>{%include 'content_assigned.html' %}</ul>
     </td>
     <td class="border"><ul>{% include 'content_completed.html' %}</ul></td>
-    <td class="border"><button class="px-3 py-1 bg-blue-400 text-white ml-4" hx-get="/v/user/{{user.user_name}}" hx-target="body">Select</button></td>
+    <td class="border"><button class="px-3 py-1 bg-blue-400 text-white" hx-get="/v/user/{{user.user_name}}" hx-target="body">Select</button></td>
 </tr>
 {% endfor %}
