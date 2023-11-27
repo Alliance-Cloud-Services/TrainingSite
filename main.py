@@ -9,7 +9,7 @@ import aiofiles
 
 from typing import Optional, List
 
-from fastapi import FastAPI, Body, File, HTTPException, status, UploadFile, Request, Header
+from fastapi import FastAPI, Body, File, HTTPException, status, UploadFile, Request, Header, Form
 from fastapi.responses import HTMLResponse, FileResponse
 from fastapi.templating import Jinja2Templates
 from pydantic import ConfigDict, BaseModel, Field
@@ -88,21 +88,21 @@ async def get_user(id: str):
 
 # Add content to the user's assigned content.
 
-@app.put("/user/{id}/content/{vid}", response_description="Assign content to a user.", response_model=UserModel, response_model_by_alias=False)
-async def update_user_content(id:str, vid:str, user:UpdateUserModel = Body(...)):
-    user = {k: v for k, v in user.model_dump(by_alias=True).items() if v is not None}
-    if(len(user) > 1):
+@app.post("/user/{id}/ac/", response_description="Assign content to a user.", response_model=UserModel, response_model_by_alias=False)
+async def update_user_content(id:str, vid:Annotated[str, Form()]):
+    user = await user_collection.find_one(({"user_name": id}))
+    if user is not None:
         update_result = await user_collection.find_one_and_update(
-            {"_id": ObjectId(id)},
-            {"$push": { "content_assigned":vid }}
+            {"user_name": id },
+            {"$push": { "content_assigned": vid}}
         )
     if update_result is not None:
         return update_result
     else:
         raise HTTPException(status_code=404, detail=f"User {id} not found.")
-    if(existing_user := await user_collection.find_one({"_id": id})) is not None:
-        return existing_user
-    raise HTTPException(status_code=404, detail=f"User {id} not found.")
+    # if(existing_user := await user_collection.find_one({"_id": id})) is not None:
+    #     return existing_user
+    # raise HTTPException(status_code=404, detail=f"User {id} not found.")
 
 
 # Add content to a user's completed content.
@@ -273,7 +273,7 @@ async def get_videos():
     for vid in os.scandir(vid_dir):
        if vid.is_file():
         videos.append(vid.name)
-    return {"vids": videos}
+    return videos
 
 
 # View for a single user
@@ -286,6 +286,16 @@ async def user_view(request: Request, id: str):
     else:
         raise HTTPException(status_code=404, detail=f"User {id} not found.")
 
+# View for assigning content to a user.
+@app.get("/v/user/{id}/ac", response_description="Assign content to a user.", response_class=HTMLResponse)
+async def assign_content_view(request: Request, id:str):
+    user = await user_collection.find_one({"user_name": id})
+    videos = await get_videos()
+    context = {"request": request, "user": user, "vids": videos}
+    if user is not None:
+        return templates.TemplateResponse("assign_content.html", context)
+    else:
+        raise HTTPException(status_code=404, detail=f"User {id} not found.")
 # View for list of users.
 @app.get("/v/users", response_description="Get a list of users", response_class=HTMLResponse)
 async def homepage(request: Request, hx_request: Optional[str] = Header(None)):
@@ -305,7 +315,16 @@ async def index(request: Request):
 
 # Video view
 
-@ app.get("/v/vid/{id}", response_description="Get a video to view.", response_class=HTMLResponse)
+@app.get("/v/vid/{id}", response_description="Get a video to view.", response_class=HTMLResponse)
 async def get_video(request: Request, id: str):
     context = {"request": request, "id": id}
     return templates.TemplateResponse("video.html", context)
+
+
+# View all videos
+
+@app.get("/v/videos", response_description="Get all the content on the server.", response_class=HTMLResponse)
+async def get_videos_view(request: Request):
+    videos = await get_videos()
+    context = {"request": request, "vids": videos}
+    return templates.TemplateResponse("content_list.html", context)

@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+        <script src="https://unpkg.com/htmx.org@1.9.6" integrity="sha384-FhXw7b6AlE/jyjlZH5iHa/tTe9EpJ1Y55RjcgPbjeWMskSxZt1v9qkxLJWNJaGni" crossorigin="anonymous"></script>
+        <script src="https://cdn.tailwindcss.com/3.3.5"></script>
+    </head>
+    <title>Assign content to {{user.user_name}}</title>
+
+    <body>
+
+        <!-- Get the content on the server and display it in a list. -->
+        <!-- Select a file from the list and click assign. -->
+        <form method="post" action="/user/{{user.user_name}}/ac">
+            {% include "content_list.html" %}
+            <input type="submit" value="Assign">
+        </form>
+    </body>
+</html>
