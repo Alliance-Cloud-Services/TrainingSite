@@ -291,3 +291,8 @@ async def homepage(request: Request, hx_request: Optional[str] = Header(None)):
 async def index(request: Request):
     context = {"request": request}
     return templates.TemplateResponse("index.html", context)
+
+@ app.get("/v/vid/{id}", response_description="Get a video to view.", response_class=HTMLResponse)
+async def get_video(request: Request, id: str):
+    context = {"request": request, "id": id}
+    return templates.TemplateResponse("video.html", context)
