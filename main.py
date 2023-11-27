@@ -329,4 +329,4 @@ async def get_video(request: Request, id: str):
 async def get_videos_view(request: Request):
     videos = await get_videos()
     context = {"request": request, "vids": videos}
-    return templates.TemplateResponse("content_list.html", context)
+    return templates.TemplateResponse("videos.html", context)
