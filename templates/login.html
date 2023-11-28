@@ -11,11 +11,14 @@
     <title>Training Index</title>
 
     <body>
-        <h1>Homepage</h1>
-        <p>Logged in as {{user.name}}</p>
+        <form method="post" action="/login">
+            <label for="user-name">Username</label>
+            <input name="user_name">
 
-        <a  href="/logout">
-            <button>Logout</button>
-        </a>
+            <label for="password">Password</label>
+            <input name="password" type="password">
+
+            <input type="submit">
+        </form>
     </body>
 </html>

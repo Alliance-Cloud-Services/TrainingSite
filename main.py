@@ -3,13 +3,14 @@
 # Create CRUD for each model.
 # Create views which call the API, keep back-end and front-end separate.
 
+import base64
 from datetime import datetime
 import os
 import aiofiles
 
 from typing import Optional, List
 
-from fastapi import FastAPI, Body, File, HTTPException, status, UploadFile, Request, Header, Form
+from fastapi import FastAPI, Body, File, HTTPException, Response, status, UploadFile, Request, Header, Form, Cookie
 from fastapi.responses import HTMLResponse, FileResponse, RedirectResponse
 from fastapi.templating import Jinja2Templates
 from pydantic import ConfigDict, BaseModel, Field
@@ -230,16 +231,6 @@ class VidModel(BaseModel):
 
 
 
-# Create a user.
-@app.post("/users", response_description="Create a User", response_model=UserModel, status_code=status.HTTP_201_CREATED, response_model_by_alias=False)
-async def create_user(user: UserModel = Body(...)):
-    try:
-        new_user = await user_collection.insert_one(user.model_dump(by_alias=True, exclude=["id"]))
-
-        created_user = await user_collection.find_one({"_id": new_user.inserted_id})
-        return created_user
-    except errors.DuplicateKeyError:
-        raise HTTPException(status_code=409, detail="Username is taken.")
 
 
 
@@ -278,6 +269,31 @@ async def get_videos():
     return videos
 
 
+
+# Login endpoint
+@app.post("/login", response_description="Login as a user.", response_class=HTMLResponse)
+async def login(request: Request, response: Response, user_name:Annotated[str, Form()], password:Annotated[str, Form()]):
+    user = await user_collection.find_one({'user_name': user_name})
+    context = {"request": request, 'user': user}
+    # If the user exists check if the password matches.
+    if user is not None:
+        if user['password'] == password:
+            response = templates.TemplateResponse("index.html", context)
+            response.set_cookie(key="user", value=user['user_name'])
+            return response
+        else:
+            ...
+    else:
+        raise HTTPException(status_code=404, detail=f"User {user_name} not found.")
+
+# Logout endpoint
+@app.get("/logout", response_description="Logout", response_class=RedirectResponse)
+async def logout(request: Request, response: Response):
+    context = {"request": request}
+    response = RedirectResponse("/")
+    response.delete_cookie("user")
+    return response
+
 # View for a single user
 @app.get("/v/user/{id}", response_description="Get a single user.", response_class=HTMLResponse)
 async def user_view(request: Request, id: str):
@@ -311,9 +327,16 @@ async def homepage(request: Request, hx_request: Optional[str] = Header(None)):
 # Homepage view
 
 @ app.get("/", response_description="Get the homepage.", response_class=HTMLResponse)
-async def index(request: Request):
+async def index(request: Request, user: Annotated[str | None, Cookie()] = None):
     context = {"request": request}
-    return templates.TemplateResponse("index.html", context)
+    # Check if user is logged in, if not return log in page. (Cookies)
+    # If user is logged in return homepage.
+    if user is not None:
+        user = await user_collection.find_one({"user_name": user})
+        context = {"request": request, "user": user}
+        return templates.TemplateResponse("index.html", context)
+    else:
+        return templates.TemplateResponse("login.html", context)
 
 # Video view
 
