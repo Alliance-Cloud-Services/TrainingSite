@@ -99,10 +99,10 @@ async def update_user_content(id:str, vid:Annotated[str, Form()]):
             {"user_name": id },
             {"$push": { "content_assigned": vid}}
         )
-    if update_result is not None:
-        return RedirectResponse(f"/v/user/{id}", status_code=status.HTTP_302_FOUND)
-    else:
-        raise HTTPException(status_code=404, detail=f"User {id} not found.")
+        if update_result is not None:
+            return RedirectResponse(f"/v/user/{id}", status_code=status.HTTP_302_FOUND)
+        else:
+            raise HTTPException(status_code=404, detail=f"User {id} not found.")
     # if(existing_user := await user_collection.find_one({"_id": id})) is not None:
     #     return existing_user
     # raise HTTPException(status_code=404, detail=f"User {id} not found.")
@@ -110,23 +110,22 @@ async def update_user_content(id:str, vid:Annotated[str, Form()]):
 
 # Add content to a user's completed content and remove from assigned.
 
-@app.put("/user/{id}/content/{vid}/c", response_description="Add content to a user's completed content.", response_model=UserModel, response_model_by_alias=False)
-async def update_user_content(id:str, vid:str, user:UpdateUserModel = Body(...)):
-    user = {k: v for k, v in user.model_dump(by_alias=True).items() if v is not None}
-
+@app.post("/user/{id}/content/{vid}/c", response_description="Add content to a user's completed content.", response_class=HTMLResponse)
+async def update_user_content(id:str, vid:str):
+    user = await user_collection.find_one(({"user_name": id}))
     # Video ID + Date
-    if(len(user) > 1):
+    if user is not None:
         update_result = await user_collection.find_one_and_update(
-            {"_id": ObjectId(id)},
-            {"$push": { "content_completed":f"{datetime.now()}"+vid }}
+            {"user_name": id},
+            {"$push": { "content_completed": vid}}
         )
-    if update_result is not None:
-        return update_result
-    else:
-        raise HTTPException(status_code=404, detail=f"User {id} not found.")
-    if(existing_user := await user_collection.find_one({"_id": id})) is not None:
-        return existing_user
-    raise HTTPException(status_code=404, detail=f"User {id} not found.")
+        if update_result is not None:
+            return RedirectResponse(f"/v/user/{id}", status_code=status.HTTP_302_FOUND)
+        else:
+            raise HTTPException(status_code=404, detail=f"User {id} not found.")
+    # if(existing_user := await user_collection.find_one({"_id": id})) is not None:
+    #     return existing_user
+    # raise HTTPException(status_code=404, detail=f"User {id} not found.")
 
 # Change a user's name.
 @app.put("/user/{id}/cn/{name}", response_description="Change a user's user name.", response_model=UserModel, response_model_by_alias=False)
@@ -341,9 +340,17 @@ async def index(request: Request, user: Annotated[str | None, Cookie()] = None):
 # Video view
 
 @app.get("/v/vid/{id}", response_description="Get a video to view.", response_class=HTMLResponse)
-async def get_video(request: Request, id: str):
+async def get_video(request: Request, id: str, user: Annotated[str | None, Cookie()] = None):
     context = {"request": request, "id": id}
-    return templates.TemplateResponse("video.html", context)
+    user = await user_collection.find_one({"user_name": user})
+    if user is not None:
+        if id in user["content_assigned"]:
+            context = {"request": request, "id": id, 'user': user}
+            return templates.TemplateResponse("video.html", context)
+        else:
+            raise HTTPException(403, "Not assigned content.")
+    else:
+        raise HTTPException(403, "Not allowed to view resource.")
 
 
 # View all videos

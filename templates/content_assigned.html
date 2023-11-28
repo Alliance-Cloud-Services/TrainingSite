@@ -1,3 +1,5 @@
 {% for vid in user.content_assigned %}
-    <li class="list-circle">{{vid}}</li>
+    <a href="/v/vid/{{vid}}">
+        <li class="list-circle">{{vid}}</li>
+    </a>
 {% endfor %}
