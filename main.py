@@ -271,20 +271,28 @@ async def get_videos():
 
 # Login endpoint
 @app.post("/login", response_description="Login as a user.", response_class=HTMLResponse)
-async def login(request: Request, response: Response, user_name:Annotated[str, Form()], password:Annotated[str, Form()]):
-    user = await user_collection.find_one({'user_name': user_name})
-    context = {"request": request, 'user': user}
-    # If the user exists check if the password matches.
-    if user is not None:
-        if user['password'] == password:
-            response = templates.TemplateResponse("index.html", context)
-            response.set_cookie(key="user", value=user['user_name'])
-            return response
+async def login(request: Request, response: Response, user_name:Annotated[str, Form()] = None, password:Annotated[str, Form()] = None):
+    if user_name is not None and password is not None:
+        user = await user_collection.find_one({'user_name': user_name})
+        context = {"request": request, 'user': user}
+        # If the user exists check if the password matches.
+        if user is not None:
+            if user['password'] == password:
+                response = templates.TemplateResponse("index.html", context)
+                response.set_cookie(key="user", value=user['user_name'])
+                return response
+            else:
+                context = {"request": request, "error": "Username or password is incorrect"}
+                response = templates.TemplateResponse("login.html", context)
+                return response
         else:
-            ...
+            context = {"request": request, "error": "Username or password is incorrect"}
+            response = templates.TemplateResponse("login.html", context)
+            return response
     else:
-        raise HTTPException(status_code=404, detail=f"User {user_name} not found.")
-
+        context = {"request": request, "error": "You must enter a username and password!"}
+        response = templates.TemplateResponse("login.html", context)
+        return response
 # Logout endpoint
 @app.get("/logout", response_description="Logout", response_class=RedirectResponse)
 async def logout(request: Request, response: Response):
