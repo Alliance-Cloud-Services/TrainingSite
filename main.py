@@ -3,6 +3,9 @@
 # Create CRUD for each model.
 # Create views which call the API, keep back-end and front-end separate.
 
+# TODO: Restrict /v/user endpoint to admin and uploading video API endpoints.
+
+
 import base64
 from datetime import datetime
 import os
@@ -235,6 +238,7 @@ class VidModel(BaseModel):
 
 @app.post("/video", response_description="Upload a video file.")
 async def upload_video(file: UploadFile=File(...), name:str = Body(...)):
+    # Check for the admin cookie if it exists allow the file upload.
 
     # Write the file to disk.
     async with aiofiles.open(os.path.join("./vids", name), 'wb') as out_vid:
@@ -281,6 +285,9 @@ async def login(request: Request, response: Response, user_name:Annotated[str, F
                 response = templates.TemplateResponse("index.html", context)
                 response.set_cookie(key="user", value=user['user_name'])
                 return response
+            # If the user is the admin set the admin cookie.
+            if user['user_name'] == "admin":
+                ...
             else:
                 context = {"request": request, "error": "Username or password is incorrect"}
                 response = templates.TemplateResponse("login.html", context)
@@ -296,6 +303,7 @@ async def login(request: Request, response: Response, user_name:Annotated[str, F
 # Logout endpoint
 @app.get("/logout", response_description="Logout", response_class=RedirectResponse)
 async def logout(request: Request, response: Response):
+
     context = {"request": request}
     response = RedirectResponse("/")
     response.delete_cookie("user")
@@ -304,6 +312,7 @@ async def logout(request: Request, response: Response):
 # View for a single user
 @app.get("/v/user/{id}", response_description="Get a single user.", response_class=HTMLResponse)
 async def user_view(request: Request, id: str):
+    # Check for the admin cookie if it exists view the user.
     user = await user_collection.find_one({"user_name": id})
     context = {"request": request, "user": user}
     if user is not None:
@@ -314,6 +323,7 @@ async def user_view(request: Request, id: str):
 # View for assigning content to a user.
 @app.get("/v/user/{id}/ac", response_description="Assign content to a user.", response_class=HTMLResponse)
 async def assign_content_view(request: Request, id:str):
+    # Check for the admin cookie if it exists view the assigning content.
     user = await user_collection.find_one({"user_name": id})
     videos = await get_videos()
     context = {"request": request, "user": user, "vids": videos}
@@ -324,6 +334,7 @@ async def assign_content_view(request: Request, id:str):
 # View for list of users.
 @app.get("/v/users", response_description="Get a list of users", response_class=HTMLResponse)
 async def homepage(request: Request, hx_request: Optional[str] = Header(None)):
+    # Check for the admin cookie if it exists view the list of users.
     users =  await user_collection.find().to_list(1000)
     context = {"request": request, "users": users}
     # If the button to reload is pressed don't reload the whole page, only the table.
@@ -365,6 +376,7 @@ async def get_video(request: Request, id: str, user: Annotated[str | None, Cooki
 
 @app.get("/v/videos", response_description="Get all the content on the server.", response_class=HTMLResponse)
 async def get_videos_view(request: Request):
+    # Check for the admin cookie, if it exists provide the list.
     videos = await get_videos()
     context = {"request": request, "vids": videos}
     return templates.TemplateResponse("videos.html", context)
