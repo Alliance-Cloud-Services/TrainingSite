@@ -375,8 +375,15 @@ async def get_video(request: Request, id: str, user: Annotated[str | None, Cooki
 # View all videos
 
 @app.get("/v/videos", response_description="Get all the content on the server.", response_class=HTMLResponse)
-async def get_videos_view(request: Request):
+async def get_videos_view(request: Request, user: Annotated[str | None, Cookie()] = None):
     # Check for the admin cookie, if it exists provide the list.
     videos = await get_videos()
     context = {"request": request, "vids": videos}
     return templates.TemplateResponse("videos.html", context)
+
+@app.get("/v/administration", response_description="Get the admin view.", response_class=HTMLResponse)
+async def get_admin_view(request: Request, user: Annotated[str | None, Cookie()] = None):
+    videos = await get_videos()
+    users =  await user_collection.find().to_list(1000)
+    context = {"request": request, "users": users, "vids": videos}
+    return templates.TemplateResponse("admin.html", context)
