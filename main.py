@@ -393,6 +393,14 @@ async def index(request: Request, user: Annotated[str | None, Cookie()] = None):
     else:
         return templates.TemplateResponse("login.html", context)
 
+
+
+# TODO: Restrict API endpoint
+@app.get("/v/upload_video", response_description="Upload video view", response_class=HTMLResponse)
+async def upload_video_view(request: Request):
+    context = {"request": request}
+    return templates.TemplateResponse("upload_video.html", context)
+
 # Video view
 
 @app.get("/v/vid/{id}", response_description="Get a video to view.", response_class=HTMLResponse)
