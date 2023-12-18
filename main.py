@@ -128,8 +128,7 @@ async def update_user_content(id:str, vid:str):
         else:
             update_result = await user_collection.find_one_and_update(
                 {"user_name": id},
-                {"$push": { "content_completed": vid}},
-                {"$pull": { "content_assigned": vid}}
+                {"$push": { "content_completed": vid}, "$pull": { "content_assigned": vid}}
             )
             if update_result is not None:
                 return RedirectResponse("/", status_code=status.HTTP_302_FOUND)
