@@ -3,8 +3,6 @@
 # Create CRUD for each model.
 # Create views which call the API, keep back-end and front-end separate.
 
-# TODO: Restrict /v/user endpoint to admin and uploading video API endpoints.
-
 
 import base64
 from datetime import datetime
@@ -68,19 +66,33 @@ class UserCollection(BaseModel):
     users: List[UserModel]
 
 
-
-# Individual CRUD User Endpoints
-
-# Create a user.
 @app.post("/users", response_description="Create a User", response_model=UserModel, status_code=status.HTTP_201_CREATED, response_model_by_alias=False)
-async def create_user(user: UserModel = Body(...)):
+async def create_user(name: Annotated[str, Form()], role: Annotated[str, Form()], user_name:Annotated[str, Form()], email:Annotated[str, Form()], password:Annotated[str, Form()]):
     try:
-        new_user = await user_collection.insert_one(user.model_dump(by_alias=True, exclude=["id"]))
+        user: UserModel = {"name": name, "role": role, "email": email, "user_name": user_name, "email": email, "password": password, "content_assigned": [], "content_completed": []}
+        new_user = await user_collection.insert_one(user)
 
         created_user = await user_collection.find_one({"_id": new_user.inserted_id})
         return created_user
     except errors.DuplicateKeyError:
         raise HTTPException(status_code=409, detail="Username is taken.")
+
+# Individual CRUD User Endpoints
+
+# # Create a user.
+# @app.post("/users", response_description="Create a User", response_model=UserModel, status_code=status.HTTP_201_CREATED, response_model_by_alias=False)
+# async def create_user(user: UserModel = Body(...)):
+#     try:
+#         print(Body(...))
+#         print(user) # id='' name='test' role='test' user_name='test' email='test' password='test' content_assigned=[] content_completed=[]
+#         print(type(user)) # <class 'main.UserModel'>
+
+#         new_user = await user_collection.insert_one(user.model_dump(by_alias=True, exclude=["id"]))
+
+#         created_user = await user_collection.find_one({"_id": new_user.inserted_id})
+#         return created_user
+#     except errors.DuplicateKeyError:
+#         raise HTTPException(status_code=409, detail="Username is taken.")
 
 
 # Get a specific user by user name.
@@ -100,7 +112,10 @@ async def update_user_content(id:str, vid:Annotated[str, Form()]):
     if user is not None:
         # Check if user already has the file assigned to them.
         if vid in user["content_assigned"]:
-            raise HTTPException(status_code=409, detail=f"User is already assigned {vid}")
+            raise HTTPException(status_code=409, detail=f"User {id} is already assigned {vid}")
+        # Check if user already completed the file assigned to them.
+        if vid in user["content_completed"]:
+            raise HTTPException(status_code=409, detail=f"User {id} has completed {vid}")
         else:
             update_result = await user_collection.find_one_and_update(
                 {"user_name": id },
@@ -245,7 +260,7 @@ class VidModel(BaseModel):
 
 
 
-
+# TODO: Restrict API Endpoint 
 @app.post("/video", response_description="Upload a video file.")
 async def upload_video(file: UploadFile=File(...), name:str = Body(...)):
     # Check for the admin cookie if it exists allow the file upload.
@@ -273,7 +288,7 @@ def stream_video(id: str):
   return os.path.join("./vids/", id)
 
 #  Return a list of all videos on the server.
-@app.get("/videos", response_description="Get a list of all the videos.")
+# @app.get("/videos", response_description="Get a list of all the videos.")
 async def get_videos():
     videos = []
     vid_dir = os.path.join("./", "vids")
@@ -320,17 +335,27 @@ async def logout(request: Request, response: Response):
     response.delete_cookie("user")
     return response
 
-# # View for a single user
-# @app.get("/v/user/{id}", response_description="Get a single user.", response_class=HTMLResponse)
-# async def user_view(request: Request, id: str):
-#     # Check for the admin cookie if it exists view the user.
-#     user = await user_collection.find_one({"user_name": id})
-#     context = {"request": request, "user": user}
-#     if user is not None:
-#         return templates.TemplateResponse("user.html", context)
-#     else:
-#         raise HTTPException(status_code=404, detail=f"User {id} not found.")
 
+# TODO: Restrict API Endpoint
+# View for creating a user.
+@app.get("/v/create_user", response_description="View for creating a user.", response_class=HTMLResponse)
+async def create_user_view(request: Request):
+    context = {"request": request}
+    return templates.TemplateResponse("add_user.html", context)
+
+# TODO: Restrict API Endpoint
+# View for a single user
+@app.get("/v/user/{id}", response_description="Get a single user.", response_class=HTMLResponse)
+async def user_view(request: Request, id: str):
+    # Check for the admin cookie if it exists view the user.
+    user = await user_collection.find_one({"user_name": id})
+    context = {"request": request, "user": user}
+    if user is not None:
+        return templates.TemplateResponse("user.html", context)
+    else:
+        raise HTTPException(status_code=404, detail=f"User {id} not found.")
+
+# TODO: Restrict API Endpoint 
 # View for assigning content to a user.
 @app.get("/v/user/{id}/ac", response_description="Assign content to a user.", response_class=HTMLResponse)
 async def assign_content_view(request: Request, id:str):
@@ -392,10 +417,19 @@ async def get_video(request: Request, id: str, user: Annotated[str | None, Cooki
 #     videos = await get_videos()
 #     context = {"request": request, "vids": videos}
 #     return templates.TemplateResponse("videos.html", context)
-
+# TODO: Restrict API Endpoint 
 @app.get("/v/administration", response_description="Get the admin view.", response_class=HTMLResponse)
 async def get_admin_view(request: Request, user: Annotated[str | None, Cookie()] = None):
     videos = await get_videos()
     users =  await user_collection.find().to_list(1000)
     context = {"request": request, "users": users, "vids": videos}
     return templates.TemplateResponse("admin.html", context)
+
+
+# TODO: Restrict API Endpoint
+
+@app.get("/v/logs", response_description="Get the logs of completed content", response_class=HTMLResponse)
+async def get_logs_view(request: Request):
+    users = await user_collection.find().to_list(1000)
+    context = {"request": request, "users": users}
+    return templates.TemplateResponse("logs.html", context)

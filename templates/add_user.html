@@ -1,0 +1,33 @@
+<html>
+    <head>
+        <title>Create User</title>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+        <script src="https://unpkg.com/htmx.org@1.9.6" integrity="sha384-FhXw7b6AlE/jyjlZH5iHa/tTe9EpJ1Y55RjcgPbjeWMskSxZt1v9qkxLJWNJaGni" crossorigin="anonymous"></script>
+        <script src="https://cdn.tailwindcss.com/3.3.5"></script>
+    </head>
+    <body>
+        <form method="post" action="/users">
+            <label  class="font-bold" for="name">Name</label>
+            <input class="border" name="name">
+
+            <label  class="font-bold" for="role">Role</label>
+            <input class="border" name="role">
+
+            <label  class="font-bold" for="email">Email</label>
+            <input class="border" name="email">
+
+            <label  class="font-bold" for="user_name">Username</label>
+            <input class="border" name="user_name">
+
+
+
+            <label class="font-bold" for="password">Password</label>
+            <input class="border" name="password" type="password">
+
+            <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full mx-2 mt-2" type="submit">Create User</button>
+        </form>
+    </body>
+</html>
