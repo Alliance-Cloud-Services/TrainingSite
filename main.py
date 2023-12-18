@@ -98,14 +98,18 @@ async def get_user(id: str):
 async def update_user_content(id:str, vid:Annotated[str, Form()]):
     user = await user_collection.find_one(({"user_name": id}))
     if user is not None:
-        update_result = await user_collection.find_one_and_update(
-            {"user_name": id },
-            {"$push": { "content_assigned": vid}}
-        )
-        if update_result is not None:
-            return RedirectResponse(f"/v/user/{id}", status_code=status.HTTP_302_FOUND)
+        # Check if user already has the file assigned to them.
+        if vid in user["content_assigned"]:
+            raise HTTPException(status_code=409, detail=f"User is already assigned {vid}")
         else:
-            raise HTTPException(status_code=404, detail=f"User {id} not found.")
+            update_result = await user_collection.find_one_and_update(
+                {"user_name": id },
+                {"$push": { "content_assigned": vid}}
+            )
+            if update_result is not None:
+                return RedirectResponse(f"/", status_code=status.HTTP_302_FOUND)
+    else:
+        raise HTTPException(status_code=404, detail=f"User {id} not found.")
     # if(existing_user := await user_collection.find_one({"_id": id})) is not None:
     #     return existing_user
     # raise HTTPException(status_code=404, detail=f"User {id} not found.")
@@ -118,14 +122,21 @@ async def update_user_content(id:str, vid:str):
     user = await user_collection.find_one(({"user_name": id}))
     # Video ID + Date
     if user is not None:
-        update_result = await user_collection.find_one_and_update(
-            {"user_name": id},
-            {"$push": { "content_completed": vid}}
-        )
-        if update_result is not None:
-            return RedirectResponse(f"/v/user/{id}", status_code=status.HTTP_302_FOUND)
+        # Check if the user already has the video completed.
+        if vid in user["content_completed"]:
+            raise HTTPException(status_code=409, detail=f"User has already completed {vid}")
         else:
-            raise HTTPException(status_code=404, detail=f"User {id} not found.")
+            update_result = await user_collection.find_one_and_update(
+                {"user_name": id},
+                {"$push": { "content_completed": vid}},
+                {"$pull": { "content_assigned": vid}}
+            )
+            if update_result is not None:
+                return RedirectResponse("/", status_code=status.HTTP_302_FOUND)
+            else:
+                raise HTTPException(status_code=500, detail=f"Unable to add content to {id}")
+    else:
+        raise HTTPException(status_code=404, detail=f"User {id} not found.")
     # if(existing_user := await user_collection.find_one({"_id": id})) is not None:
     #     return existing_user
     # raise HTTPException(status_code=404, detail=f"User {id} not found.")
@@ -240,6 +251,7 @@ class VidModel(BaseModel):
 async def upload_video(file: UploadFile=File(...), name:str = Body(...)):
     # Check for the admin cookie if it exists allow the file upload.
 
+
     # Write the file to disk.
     async with aiofiles.open(os.path.join("./vids", name), 'wb') as out_vid:
         content = await file.read()
@@ -309,16 +321,16 @@ async def logout(request: Request, response: Response):
     response.delete_cookie("user")
     return response
 
-# View for a single user
-@app.get("/v/user/{id}", response_description="Get a single user.", response_class=HTMLResponse)
-async def user_view(request: Request, id: str):
-    # Check for the admin cookie if it exists view the user.
-    user = await user_collection.find_one({"user_name": id})
-    context = {"request": request, "user": user}
-    if user is not None:
-        return templates.TemplateResponse("user.html", context)
-    else:
-        raise HTTPException(status_code=404, detail=f"User {id} not found.")
+# # View for a single user
+# @app.get("/v/user/{id}", response_description="Get a single user.", response_class=HTMLResponse)
+# async def user_view(request: Request, id: str):
+#     # Check for the admin cookie if it exists view the user.
+#     user = await user_collection.find_one({"user_name": id})
+#     context = {"request": request, "user": user}
+#     if user is not None:
+#         return templates.TemplateResponse("user.html", context)
+#     else:
+#         raise HTTPException(status_code=404, detail=f"User {id} not found.")
 
 # View for assigning content to a user.
 @app.get("/v/user/{id}/ac", response_description="Assign content to a user.", response_class=HTMLResponse)
@@ -331,16 +343,17 @@ async def assign_content_view(request: Request, id:str):
         return templates.TemplateResponse("assign_content.html", context)
     else:
         raise HTTPException(status_code=404, detail=f"User {id} not found.")
+
 # View for list of users.
-@app.get("/v/users", response_description="Get a list of users", response_class=HTMLResponse)
-async def homepage(request: Request, hx_request: Optional[str] = Header(None)):
-    # Check for the admin cookie if it exists view the list of users.
-    users =  await user_collection.find().to_list(1000)
-    context = {"request": request, "users": users}
-    # If the button to reload is pressed don't reload the whole page, only the table.
-    if hx_request:
-        return templates.TemplateResponse("users_table.html", context)
-    return templates.TemplateResponse("users.html", context)
+#@app.get("/v/users", response_description="Get a list of users", response_class=HTMLResponse)
+#async def homepage(request: Request, hx_request: Optional[str] = Header(None)):
+    # # Check for the admin cookie if it exists view the list of users.
+    # users =  await user_collection.find().to_list(1000)
+    # context = {"request": request, "users": users}
+    # # If the button to reload is pressed don't reload the whole page, only the table.
+    # if hx_request:
+    #     return templates.TemplateResponse("users_table.html", context)
+    # return templates.TemplateResponse("users.html", context)
 
 # Homepage view
 
@@ -374,12 +387,12 @@ async def get_video(request: Request, id: str, user: Annotated[str | None, Cooki
 
 # View all videos
 
-@app.get("/v/videos", response_description="Get all the content on the server.", response_class=HTMLResponse)
-async def get_videos_view(request: Request, user: Annotated[str | None, Cookie()] = None):
-    # Check for the admin cookie, if it exists provide the list.
-    videos = await get_videos()
-    context = {"request": request, "vids": videos}
-    return templates.TemplateResponse("videos.html", context)
+# @app.get("/v/videos", response_description="Get all the content on the server.", response_class=HTMLResponse)
+# async def get_videos_view(request: Request, user: Annotated[str | None, Cookie()] = None):
+#     # Check for the admin cookie, if it exists provide the list.
+#     videos = await get_videos()
+#     context = {"request": request, "vids": videos}
+#     return templates.TemplateResponse("videos.html", context)
 
 @app.get("/v/administration", response_description="Get the admin view.", response_class=HTMLResponse)
 async def get_admin_view(request: Request, user: Annotated[str | None, Cookie()] = None):
