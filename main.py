@@ -232,9 +232,17 @@ async def update_user_content(id:str, role:str, user:UpdateUserModel = Body(...)
         return existing_user
     raise HTTPException(status_code=404, detail=f"User {id} not found.")
 
-@app.delete("/user/{id}", response_description="Delete user", response_model=UserModel, response_model_by_alias=False)
+@app.get("/user/{id}/delete", response_description="Delete user", response_model=UserModel, response_model_by_alias=False)
 async def delete_user(id: str):
-    ...
+    user = await user_collection.find_one(({"user_name": id}))
+    if user is not None:
+        delete_result = await user_collection.delete_one(({"user_name": id}))
+        if delete_result.deleted_count == 1:
+             return Response(status_code=status.HTTP_204_NO_CONTENT)
+        else:
+            raise HTTPException(status_code=500, detail=f"Unable to delete user.")
+    else:
+        raise HTTPException(status_code=404, detail=f"User {id} not found.")
 
 # Multiple Users
 
