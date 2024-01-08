@@ -15,7 +15,10 @@
             <tbody class="text-center text-sm" id="table-body">
                 {% include 'users_table.html' %}
                 <tr class="border">
-                    <button class="px-3 py-1 bg-blue-600 text-white mb-2" hx-get="/v/users" hx-target="#table-body">Refresh Users</button>
+                    <a href="/v/create_user">
+                        <button class="px-3 py-1 bg-blue-600 text-white mb-2">Create User</button>
+                    </a>
+                    <!-- <button class="px-3 py-1 bg-blue-600 text-white mb-2" hx-get="/v/users" hx-target="#table-body">Refresh Users</button> -->
                 </tr>
             </tbody>
         </table>

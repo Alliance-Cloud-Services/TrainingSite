@@ -67,15 +67,16 @@ class UserCollection(BaseModel):
 
 
 @app.post("/users", response_description="Create a User", response_model=UserModel, status_code=status.HTTP_201_CREATED, response_model_by_alias=False)
-async def create_user(name: Annotated[str, Form()], role: Annotated[str, Form()], user_name:Annotated[str, Form()], email:Annotated[str, Form()], password:Annotated[str, Form()]):
+async def create_user(request: Request, name: Annotated[str, Form()], role: Annotated[str, Form()], user_name:Annotated[str, Form()], email:Annotated[str, Form()], password:Annotated[str, Form()]):
     try:
         user: UserModel = {"name": name, "role": role, "email": email, "user_name": user_name, "email": email, "password": password, "content_assigned": [], "content_completed": []}
         new_user = await user_collection.insert_one(user)
 
         created_user = await user_collection.find_one({"_id": new_user.inserted_id})
-        return created_user
+        return RedirectResponse(f"/v/administration", status_code=status.HTTP_303_SEE_OTHER)
     except errors.DuplicateKeyError:
-        raise HTTPException(status_code=409, detail="Username is taken.")
+        context = {"request": request, "error": "Username is already taken!"}
+        return templates.TemplateResponse("add_user.html", context)
 
 # Individual CRUD User Endpoints
 
