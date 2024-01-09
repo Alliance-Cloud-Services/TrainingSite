@@ -450,3 +450,9 @@ async def get_logs_view(request: Request):
     users = await user_collection.find().to_list(1000)
     context = {"request": request, "users": users}
     return templates.TemplateResponse("logs.html", context)
+
+@app.get("/v/quiz/{id}", response_description="Get a quiz for a video.", response_class=HTMLResponse)
+async def get_quiz(request:Request):
+    videos = await get_videos()
+    context = {"request": request, "videos": videos}
+    return templates.TemplateResponse("quiz.html", context)
