@@ -454,5 +454,6 @@ async def get_logs_view(request: Request):
 @app.get("/v/quiz/{id}", response_description="Get a quiz for a video.", response_class=HTMLResponse)
 async def get_quiz(request:Request):
     videos = await get_videos()
+    # Quiz questions/answers stored in text file or class/objects?
     context = {"request": request, "videos": videos}
     return templates.TemplateResponse("quiz.html", context)
