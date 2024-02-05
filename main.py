@@ -6,7 +6,7 @@ from jinja2 import Template
 from pydantic import BeforeValidator
 import motor.motor_asyncio
 
-from routers import users, views, vids, admin
+from routers import users, views, vids, admin, quizzes
 
 templates = Jinja2Templates(directory="templates")
 
@@ -25,6 +25,7 @@ app.include_router(users.router)
 app.include_router(views.router)
 app.include_router(vids.router)
 app.include_router(admin.router)
+app.include_router(quizzes.router)
 
 @ app.get("/", response_description="Get the homepage.", response_class=HTMLResponse)
 async def index(request: Request, user: Annotated[str | None, Cookie()] = None):

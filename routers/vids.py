@@ -23,6 +23,12 @@ vid_collection = db.get_collection("vids")
 # It will be represented as a `str` on the model so that it can be serialized to JSON.
 PyObjectId = Annotated[str, BeforeValidator(str)]
 
+class VidModel(BaseModel):
+   id: Optional[PyObjectId] = Field(alias="_id", default=None)
+   file_name: str = Field(...)
+   quiz: str = Field(...)
+   model_config = ConfigDict(populate_by_name=True, arbitrary_types_allowed=True)
+
 async def get_videos():
     videos = []
     vid_dir = os.path.join("./", "vids")

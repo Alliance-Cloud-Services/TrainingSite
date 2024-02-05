@@ -33,6 +33,7 @@ class UserModel(BaseModel):
     password: str = Field(...)
     content_assigned: Optional[List[str]] = None
     content_completed: Optional[List[str]] = None
+    quiz_scores: Optional[List[str]] = None
     model_config = ConfigDict(populate_by_name=True, arbitrary_types_allowed=True)
 
 class UpdateUserModel(BaseModel):
@@ -50,7 +51,7 @@ class UpdateUserModel(BaseModel):
 @router.post("/users", response_description="Create a User", response_model=UserModel, status_code=status.HTTP_201_CREATED, response_model_by_alias=False)
 async def create_user(request: Request, name: Annotated[str, Form()], role: Annotated[str, Form()], user_name:Annotated[str, Form()], email:Annotated[str, Form()], password:Annotated[str, Form()]):
     try:
-        user: UserModel = {"name": name, "role": role, "email": email, "user_name": user_name, "email": email, "password": password, "content_assigned": [], "content_completed": []}
+        user: UserModel = {"name": name, "role": role, "email": email, "user_name": user_name, "email": email, "password": password, "content_assigned": [], "content_completed": [], "quiz_scores": []}
         new_user = await user_collection.insert_one(user)
 
         created_user = await user_collection.find_one({"_id": new_user.inserted_id})
