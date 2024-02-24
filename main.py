@@ -6,7 +6,7 @@ from jinja2 import Template
 from pydantic import BeforeValidator
 import motor.motor_asyncio
 
-from routers import users, views, vids, admin
+from routers import users, vids, admin
 
 templates = Jinja2Templates(directory="templates")
 
@@ -22,7 +22,6 @@ PyObjectId = Annotated[str, BeforeValidator(str)]
 
 app = FastAPI();
 app.include_router(users.router)
-app.include_router(views.router)
 app.include_router(vids.router)
 app.include_router(admin.router)
 

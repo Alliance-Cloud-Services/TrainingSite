@@ -12,6 +12,7 @@ import motor.motor_asyncio
 from pymongo import ReturnDocument, errors
 from pathlib import Path
 import uuid
+import glob
 
 router = APIRouter()
 templates = Jinja2Templates(directory="templates")
@@ -22,14 +23,12 @@ db = client.train
 user_collection = db.get_collection("users")
 
 
-async def get_videos():
-    videos = []
-    vid_dir = os.path.join("./", "vids")
-    for vid in os.scandir(vid_dir):
-       if vid.is_file():
-        videos.append(vid.name)
-    return videos
 
+async def get_videos():
+    mp4_files = glob.iglob("./vids/**/*.mp4", recursive=True)
+    for mp4 in mp4_files:
+        print(mp4)
+    return mp4_files
 @router.get("/video/{id}", response_description="Get a specific video file.", response_class=FileResponse)
 def stream_video(id: str):
   return os.path.join("./vids/", id)
