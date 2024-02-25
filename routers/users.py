@@ -130,7 +130,7 @@ async def update_user_content(id:str, vid:Annotated[str, Form()]):
         raise HTTPException(status_code=404, detail=f"User {id} not found.")
 
 # Add content to a user's completed content.
-@router.post("/user/{id}/content/{vid}/c", response_description="Add content to a user's completed content.", response_class=HTMLResponse)
+@router.post("/user/{id}/content/vids/{uuid}/{vid}/c", response_description="Add content to a user's completed content.", response_class=HTMLResponse)
 async def update_user_content(id:str, vid:str):
     user = await user_collection.find_one(({"user_name": id}))
     # Video ID + Date
@@ -148,7 +148,7 @@ async def update_user_content(id:str, vid:str):
             else:
                 raise HTTPException(status_code=500, detail=f"Unable to add content to {id}")
     else:
-        raise HTTPException(status_code=404, detail=f"User {id} not found.")
+        raise HTTPException(status_code=404, detail=f"User: {id}, not found.")
 
 
 
