@@ -1,6 +1,7 @@
 from typing import Annotated
 from fastapi import Cookie, FastAPI, Request
 from fastapi.responses import HTMLResponse
+from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from jinja2 import Template
 from pydantic import BeforeValidator
@@ -21,6 +22,7 @@ vid_collection = db.get_collection("vids")
 PyObjectId = Annotated[str, BeforeValidator(str)]
 
 app = FastAPI();
+app.mount("/public", StaticFiles(directory="public"), name="public")
 app.include_router(users.router)
 app.include_router(vids.router)
 # app.include_router(admin.router)
