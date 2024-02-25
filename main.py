@@ -23,7 +23,7 @@ PyObjectId = Annotated[str, BeforeValidator(str)]
 app = FastAPI();
 app.include_router(users.router)
 app.include_router(vids.router)
-app.include_router(admin.router)
+# app.include_router(admin.router)
 
 @ app.get("/", response_description="Get the homepage.", response_class=HTMLResponse)
 async def index(request: Request, user: Annotated[str | None, Cookie()] = None):
