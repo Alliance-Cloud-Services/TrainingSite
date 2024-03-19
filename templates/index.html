@@ -7,19 +7,21 @@
 
         <script src="https://unpkg.com/htmx.org@1.9.6" integrity="sha384-FhXw7b6AlE/jyjlZH5iHa/tTe9EpJ1Y55RjcgPbjeWMskSxZt1v9qkxLJWNJaGni" crossorigin="anonymous"></script>
         <script src="https://cdn.tailwindcss.com/3.3.5"></script>
+        <link rel="stylesheet" href="/public/index.css">
     </head>
     <title>Training Index</title>
 
     <body>
-        <h1>Homepage</h1>
-        <p>Logged in as {{user.name}}</p>
-
-        <h2>Here's your assigned content.</h2>
-        {% include 'content_assigned.html'%}
-
-
-        <a href="/logout">
-            <button>Logout</button>
-        </a>
+        <div class=>
+            <div>
+                <h2 class="font-bold">Assigned Content</h2>
+                {% include 'content_assigned.html'%}
+            </div>
+            <div>
+                <a href="/logout">
+                    <button>Logout</button>
+                </a>
+            </div>
+        </div>
     </body>
 </html>
