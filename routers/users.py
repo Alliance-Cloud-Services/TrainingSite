@@ -44,6 +44,7 @@ class UpdateUserModel(BaseModel):
     password: Optional[str] = None
     content_assigned: Optional[List[str]] = None
     content_completed: Optional[List[str]] = None
+    quiz_scores: Optional[List[str]] = None
     model_config = ConfigDict(arbitrary_types_allowed=True, json_encoders={ObjectId: str})
 
 
@@ -131,7 +132,7 @@ async def update_user_content(id:str, vid:Annotated[str, Form()]):
 
 # Add content to a user's completed content.
 @router.post("/user/{id}/content/vids/{uuid}/{vid}/c", response_description="Add content to a user's completed content.", response_class=HTMLResponse)
-async def update_user_content(id:str, vid:str):
+async def update_user_content(id:str, vid:str, quizScore:Annotated[str, Form()]):
     user = await user_collection.find_one(({"user_name": id}))
     # Video ID + Date
     if user is not None:
@@ -141,7 +142,7 @@ async def update_user_content(id:str, vid:str):
         else:
             update_result = await user_collection.find_one_and_update(
                 {"user_name": id},
-                {"$push": { "content_completed": vid}, "$pull": { "content_assigned": vid}}
+                {"$push": { "content_completed": f"{vid}:{quizScore}"}, "$pull": { "content_assigned": vid}}
             )
             if update_result is not None:
                 return RedirectResponse("/", status_code=status.HTTP_302_FOUND)

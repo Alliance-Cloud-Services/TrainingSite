@@ -1,5 +1,25 @@
 <html>
+    <head>
+        <title>Upload Quiz and Video</title>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+        <!-- <script src="https://unpkg.com/htmx.org@1.9.6" integrity="sha384-FhXw7b6AlE/jyjlZH5iHa/tTe9EpJ1Y55RjcgPbjeWMskSxZt1v9qkxLJWNJaGni" crossorigin="anonymous"></script> -->
+        <script src="https://cdn.tailwindcss.com/3.3.5"></script>
+        <link rel="stylesheet" href="/public/upload_video.css">
+    </head>
     <body>
-        <p>Upload :3</p>
+        <div class="center">
+            <form method="post" action="/upload_qv">
+                <label  class="font-bold" for="quiz">Quiz</label>
+                <input  name="quiz" type="file">
+    
+                <label class="font-bold" for="video">Video</label>
+                <input name="video" type="file">
+    
+                <button class="bg-slate-900 hover:bg-slate-950 text-white font-bold py-2 px-4  mx-2 mt-2" type="submit">Upload Quiz and Video</button>
+            </form>
+        </div>
     </body>
 </html>
