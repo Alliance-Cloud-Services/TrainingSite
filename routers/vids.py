@@ -24,10 +24,9 @@ user_collection = db.get_collection("users")
 
 
 async def get_video_by_id(id: str):
-    mp4_files = mp4_files = glob.iglob("./vids/**/*.mp4", recursive=True)
+    mp4_files = glob.iglob("./vids/**/*.mp4", recursive=True)
     for mp4 in mp4_files:
        if id in mp4:
-           print(mp4)
            return mp4
        else:
            continue
@@ -36,10 +35,9 @@ async def get_video_by_id(id: str):
 async def get_vids():
     x = await get_video_by_id("uuid")
     return {"vids": x}
+
 async def get_videos():
     mp4_files = glob.iglob("./vids/**/*.mp4", recursive=True)
-    for mp4 in mp4_files:
-        print(mp4)
     return mp4_files
 
 
@@ -75,27 +73,59 @@ async def get_videos():
 
 #     return {"filename": video.filename, "contents": file_content}
 
+# @router.post("/upload_qv", response_description="Upload quiz and video file.", status_code=status.HTTP_202_ACCEPTED)
+# async def upload_video_and_quiz(files: list[UploadFile]):
+#     # Save the quiz and video file to a folder with a UUID.
+#     if len(files) == 2:
+#         id = str(uuid.uuid4())
+#         path = Path(f"./vids/{id}")
+#         path.mkdir(parents=True, exist_ok=True)
+#         for file in files:
+#             if ".mp4" in file.filename:
+#                 file_content = await file.read()
+#                 video_file = open(f"{path}/{file.filename}", "w+b")
+#                 video_file.write(file_content)
+#             elif ".txt" in file.filename:
+#                 file_content = await file.read()
+#                 quiz_file = open(f"{path}/{file.filename}", "w")
+#                 quiz_file.write(file_content.decode("utf-8"))
+#             else:
+#                 return {"message": "Must be .txt and .mp4!"}
+#     else:
+#         return {"message": "Must upload one .mp4 and one .txt!"}
+#     return {"filenames": [file.filename for file in files]}
+
+
 @router.post("/upload_qv", response_description="Upload quiz and video file.", status_code=status.HTTP_202_ACCEPTED)
-async def upload_video_and_quiz(files: list[UploadFile]):
-    # Save the quiz and video file to a folder with a UUID.
-    if len(files) == 2:
-        id = str(uuid.uuid4())
-        path = Path(f"./vids/{id}")
-        path.mkdir(parents=True, exist_ok=True)
-        for file in files:
-            if ".mp4" in file.filename:
-                file_content = await file.read()
-                video_file = open(f"{path}/{file.filename}", "w+b")
-                video_file.write(file_content)
-            elif ".txt" in file.filename:
-                file_content = await file.read()
-                quiz_file = open(f"{path}/{file.filename}", "w")
-                quiz_file.write(file_content.decode("utf-8"))
-            else:
-                return {"message": "Must be .txt and .mp4!"}
+async def upload_vid_and_quiz(quiz: UploadFile, video: UploadFile):
+    if quiz and video:
+        if quiz.content_type == "text/plain" and video.content_type == "video/mp4":
+            print("Quiz is a text file.")
+            print("Video is a .mp4")
+
+            id = str(uuid.uuid4())
+            path = Path(f"./vids/{id}")
+            path.mkdir(parents=True, exist_ok=True)
+
+            files = [quiz, video]
+
+            for file in files:
+                if file.content_type == "video/mp4":
+                    file_content = await file.read()
+                    video_file = open(f"{path}/{file.filename}", "w+b")
+                    video_file.write(file_content)
+
+                if file.content_type == "text/plain":
+                    file_content = await file.read()
+                    quiz_file = open(f"{path}/{file.filename}", "w")
+                    quiz_file.write(file_content.decode("utf-8"))
+
+            return RedirectResponse(f"/v/administration", status_code = status.HTTP_303_SEE_OTHER)
+        else:
+            print("Quiz must be .txt and video must be .mp4")
     else:
-        return {"message": "Must upload one .mp4 and one .txt!"}
-    return {"filenames": [file.filename for file in files]}
+        print("You must upload both a quiz and video file!")
+
 
 @router.get("/v/video/{id}", response_description="View a video by UUID")
 async def show_video(request: Request, id:str, user: Annotated[str | None, Cookie()] = None):

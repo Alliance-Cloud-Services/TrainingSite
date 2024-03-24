@@ -48,6 +48,7 @@ async def assign_content_view(request: Request, id:str):
     # Check for the admin cookie if it exists view the assigning content.
     user = await user_collection.find_one({"user_name": id})
     videos = await get_videos()
+    print(videos)
     context = {"request": request, "user": user, "vids": videos}
     if user is not None:
         return templates.TemplateResponse("assign_content.html", context)
