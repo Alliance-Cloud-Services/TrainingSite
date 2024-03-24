@@ -23,13 +23,14 @@ db = client.train
 user_collection = db.get_collection("users")
 
 
-async def get_video_by_id(id: str):
+async def get_video_by_id(file: str):
     mp4_files = glob.iglob("./vids/**/*.mp4", recursive=True)
     for mp4 in mp4_files:
-       if id in mp4:
+       if file in mp4:
            return mp4
        else:
            continue
+
 
 @router.get("/videos")
 async def get_vids():
@@ -100,8 +101,6 @@ async def get_videos():
 async def upload_vid_and_quiz(quiz: UploadFile, video: UploadFile):
     if quiz and video:
         if quiz.content_type == "text/plain" and video.content_type == "video/mp4":
-            print("Quiz is a text file.")
-            print("Video is a .mp4")
 
             id = str(uuid.uuid4())
             path = Path(f"./vids/{id}")
@@ -134,7 +133,6 @@ async def show_video(request: Request, id:str, user: Annotated[str | None, Cooki
      video = await get_video_by_id(id)
      user = await user_collection.find_one({"user_name": user})
      context = {"request": request, "id": video, 'user': user}
-     print(video)
      return templates.TemplateResponse("video.html", context)
      
     #  if user is not None:
@@ -150,5 +148,4 @@ async def show_video(request: Request, id:str, user: Annotated[str | None, Cooki
 @router.get("/video/vids/{id}/{file}", response_description="Get a specific video file.", response_class=FileResponse)
 async def stream_video(id: str):
     video = await get_video_by_id(id)
-    print(f"Video Path: {video}")
     return video

@@ -85,7 +85,7 @@ async def login(request: Request, response: Response, user_name:Annotated[str, F
                 response = templates.TemplateResponse("index.html", context)
                 response.set_cookie(key="user", value=user['user_name'])
                 return response
-            # If the user is the admin set the admin cookie.
+            # If the user is the admin set the admin cookie. #TODO
             if user['user_name'] == "admin":
                 ...
             else:
@@ -130,7 +130,7 @@ async def update_user_content(id:str, vid:Annotated[str, Form()]):
     else:
         raise HTTPException(status_code=404, detail=f"User {id} not found.")
 
-# Add content to a user's completed content.
+# Add content to a user's completed content. #TODO Fix quiz scores.
 @router.post("/user/{id}/content/vids/{uuid}/{vid}/c", response_description="Add content to a user's completed content.", response_class=HTMLResponse)
 async def update_user_content(id:str, vid:str, quizScore:Annotated[str, Form()]):
     user = await user_collection.find_one(({"user_name": id}))

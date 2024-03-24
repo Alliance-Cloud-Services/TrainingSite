@@ -1,3 +1,4 @@
+import os
 from typing import Annotated
 from fastapi import APIRouter, Cookie, HTTPException, Request
 from fastapi.responses import HTMLResponse
@@ -20,7 +21,10 @@ vid_collection = db.get_collection("vids")
 # Admin Dashboard
 @router.get("/v/administration", response_description="Get the admin view.", response_class=HTMLResponse)
 async def get_admin_view(request: Request, user: Annotated[str | None, Cookie()] = None):
-    videos = await get_videos()
+    content = await get_videos()
+    videos = []
+    for vid in content:
+        videos.append(os.path.basename(vid))
     users =  await user_collection.find().to_list(1000)
     context = {"request": request, "users": users, "vids": videos}
     return templates.TemplateResponse("admin.html", context)
@@ -47,8 +51,11 @@ async def user_view(request: Request, id: str):
 async def assign_content_view(request: Request, id:str):
     # Check for the admin cookie if it exists view the assigning content.
     user = await user_collection.find_one({"user_name": id})
-    videos = await get_videos()
-    print(videos)
+    content = await get_videos()
+    videos = []
+    for vid in content:
+        videos.append(os.path.basename(vid))
+    
     context = {"request": request, "user": user, "vids": videos}
     if user is not None:
         return templates.TemplateResponse("assign_content.html", context)
