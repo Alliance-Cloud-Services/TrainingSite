@@ -1,4 +1,11 @@
 import re
+import os
+from typing import Annotated
+from fastapi import APIRouter, Cookie, HTTPException, Request
+from fastapi.responses import HTMLResponse
+from fastapi.templating import Jinja2Templates
+import motor.motor_asyncio
+
 class Question:
     def __init__(self, text: str, options: list[str], correct_answer: str):
         self.text = text
@@ -59,8 +66,3 @@ class Quiz:
                     self.questions.append(question)
                     question = Question(None, [], None)
                     
-
-    
-
-
-
