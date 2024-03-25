@@ -10,6 +10,8 @@ from bson import ObjectId
 import motor.motor_asyncio
 from pymongo import ReturnDocument, errors
 
+from quizzes import Quiz
+
 router = APIRouter()
 templates = Jinja2Templates(directory="templates")
 
@@ -130,9 +132,9 @@ async def update_user_content(id:str, vid:Annotated[str, Form()]):
     else:
         raise HTTPException(status_code=404, detail=f"User {id} not found.")
 
-# Add content to a user's completed content. #TODO Fix quiz scores.
+# Add content to a user's completed content and score the quiz. #TODO Fix quiz scores.
 @router.post("/user/{id}/content/vids/{uuid}/{vid}/c", response_description="Add content to a user's completed content.", response_class=HTMLResponse)
-async def update_user_content(id:str, vid:str, quizScore:Annotated[str, Form()]):
+async def update_user_content(id:str, vid:str, uuid: str):
     user = await user_collection.find_one(({"user_name": id}))
     # Video ID + Date
     if user is not None:
@@ -140,9 +142,16 @@ async def update_user_content(id:str, vid:str, quizScore:Annotated[str, Form()])
         if vid in user["content_completed"]:
             raise HTTPException(status_code=409, detail=f"User has already completed {vid}")
         else:
+
+            # Open the video's quiz file.
+            print(id)
+            print(uuid)
+            print(vid)
+
+
             update_result = await user_collection.find_one_and_update(
                 {"user_name": id},
-                {"$push": { "content_completed": f"{vid}:{quizScore}"}, "$pull": { "content_assigned": vid}}
+                {"$push": { "content_completed": f"{vid}"}, "$pull": { "content_assigned": vid}}
             )
             if update_result is not None:
                 return RedirectResponse("/", status_code=status.HTTP_302_FOUND)
