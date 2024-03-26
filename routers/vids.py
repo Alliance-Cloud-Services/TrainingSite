@@ -39,7 +39,6 @@ class Video:
 
        
 async def get_video_by_uuid(video_name: str):
-    uuids = glob.glob("./vids/**/", recursive=True)
     vids = glob.glob("./vids/**/*.mp4", recursive=True)
     video = Video()
 
@@ -48,6 +47,11 @@ async def get_video_by_uuid(video_name: str):
         video_pattern = re.search(video_name, vid)
         # For each video file find the parent directory of the file.
         if video_pattern:
+           video_path = re.sub(video_name, " ", video_pattern.string).rstrip()
+           quizzes = glob.glob(f"{video_path}*.txt", recursive=True)
+           for quiz in quizzes:
+            if len(quizzes) == 1:
+                video.quiz = quiz
            video.mp4=video_pattern.string
         else:
             continue
@@ -101,11 +105,11 @@ async def show_video(request: Request, id:str, user: Annotated[str | None, Cooki
      context = {"request": request, "id": id}
      # Find the video folder and return the .mp4 name.
      video = await get_video_by_uuid(id)
-     #  video_quiz = Quiz()
-     #  video_quiz.from_file(quiz)
+     video_quiz = Quiz()
+     video_quiz.from_file(video.quiz)
 
      user = await user_collection.find_one({"user_name": user})
-     context = {"request": request, "id": video.mp4, 'user': user, 'quiz': video}
+     context = {"request": request, "id": video.mp4, 'user': user, 'quiz': video_quiz}
      return templates.TemplateResponse("video.html", context)
      
 
