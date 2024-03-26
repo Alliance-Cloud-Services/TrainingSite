@@ -3,8 +3,8 @@
         <source src="/video/{{id}}">
     </video>
 
-    <form method="post" action="/user/{{user.user_name}}/content/{{id}}/c">
-        <input type="submit" value="Completed">
+    <form method="post" action="/user/{{user.user_name}}/content/{{id}}/c", enctype="multipart/form-data">
         {% include 'quiz.html' %}
+        <input type="submit" value="Completed">
     </form>
 </div>

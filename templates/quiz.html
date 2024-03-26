@@ -1,8 +1,8 @@
 {% for question in quiz.questions %}
-    <p>{{question.text}}</p>
-    <ul>
-        {% for option in question.options %}
-            <li>option</li>
-        {% endfor %}
-    </ul>
+  <p>{{question.text}}</p>
+  <ul>
+  {% for option in question.options %}
+    <li>{{option}}</li>
+  {% endfor %}
+  </ul>
 {% endfor %}
