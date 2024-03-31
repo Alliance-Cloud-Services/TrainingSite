@@ -1,5 +1,10 @@
 {% for vid in user.content_assigned %}
-    <a href="/v/video/{{vid}}">
-        <li class="list-circle mx-4">{{vid}}</li>
-    </a>
+<div class="max-w-sm w-full lg:max-w-full lg:flex">
+    <div class="border-r border-b border-l border-gray-400 lg:border-l lg:border-t lg:border-gray-400 bg-white rounded-b lg:rounded-b-none lg:rounded-r p-4 flex flex-col justify-between leading-normal">
+        <div class="">
+            <a href="/v/video/{{vid}}">{{vid}}</a>
+        </div>
+    </div>
+</div>
 {% endfor %}
+

@@ -11,6 +11,8 @@ import motor.motor_asyncio
 from pymongo import ReturnDocument, errors
 
 from quizzes import Quiz
+from routers.vids import get_video_by_uuid
+from datetime import datetime 
 
 router = APIRouter()
 templates = Jinja2Templates(directory="templates")
@@ -160,25 +162,36 @@ async def update_user_content(id:str, vid:str, uuid: str, option1: Annotated[str
             options.append(option13)
             options.append(option14)
 
-
-            for i in options:
-                print(i)
+            clean_options = []
+            for option in options:
+                if option is None:
+                    continue
+                else:
+                    clean_options.append(option)
+                    print(option)
 
             print(id)
             print(uuid),
             print(vid)
+            
+            video = await get_video_by_uuid(vid)
+            video_quiz = Quiz()
+            video_quiz.from_file(video.quiz)
 
 
-    #         update_result = await user_collection.find_one_and_update(
-    #             {"user_name": id},
-    #             {"$push": { "content_completed": f"{vid}"}, "$pull": { "content_assigned": vid}}
-    #         )
-    #         if update_result is not None:
-    #             return RedirectResponse("/", status_code=status.HTTP_302_FOUND)
-    #         else:
-    #             raise HTTPException(status_code=500, detail=f"Unable to add content to {id}")
-    # else:
-    #     raise HTTPException(status_code=404, detail=f"User: {id}, not found.")
+            score = video_quiz.score_quiz(clean_options)
+            date = datetime.now()
+
+            update_result = await user_collection.find_one_and_update(
+                {"user_name": id},
+                {"$push": { "content_completed": f"{date.month}/{date.day}/{date.year}, {date.hour}:{date.minute}, {vid}:  {score}%"}, "$pull": { "content_assigned": vid}}
+            )
+            if update_result is not None:
+                return RedirectResponse("/", status_code=status.HTTP_302_FOUND)
+            else:
+                raise HTTPException(status_code=500, detail=f"Unable to add content to {id}")
+    else:
+        raise HTTPException(status_code=404, detail=f"User: {id}, not found.")
 
 
 
