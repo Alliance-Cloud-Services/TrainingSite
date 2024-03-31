@@ -1,8 +1,8 @@
 {% for question in quiz.questions %}
-  <p>{{question.text}}</p>
+  <h1>{{question.text}}</h1>
   <ul>
-  {% for option in question.options %}
-    <li>{{option}}</li>
-  {% endfor %}
+    {% for  option in question.options %}
+      <input type="checkbox" name="option{{loop.index}}" value="{{option}}">{{option}}</input>
+    {% endfor %}
   </ul>
 {% endfor %}

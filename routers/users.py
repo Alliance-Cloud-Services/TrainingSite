@@ -134,7 +134,7 @@ async def update_user_content(id:str, vid:Annotated[str, Form()]):
 
 # Add content to a user's completed content and score the quiz. #TODO Fix quiz scores.
 @router.post("/user/{id}/content/vids/{uuid}/{vid}/c", response_description="Add content to a user's completed content.", response_class=HTMLResponse)
-async def update_user_content(id:str, vid:str, uuid: str):
+async def update_user_content(id:str, vid:str, uuid: str, option1: Annotated[str, Form()] = None, option2: Annotated[str, Form()] = None, option3: Annotated[str, Form()] = None, option4: Annotated[str, Form()] = None, option5: Annotated[str, Form()] = None, option6: Annotated[str, Form()] = None, option7: Annotated[str, Form()] = None, option8: Annotated[str, Form()] = None, option9: Annotated[str, Form()] = None, option10: Annotated[str, Form()] = None, option11: Annotated[str, Form()] = None, option12: Annotated[str, Form()] = None, option13: Annotated[str, Form()] = None, option14: Annotated[str, Form()] = None):
     user = await user_collection.find_one(({"user_name": id}))
     # Video ID + Date
     if user is not None:
@@ -144,21 +144,41 @@ async def update_user_content(id:str, vid:str, uuid: str):
         else:
 
             # Open the video's quiz file.
+            options = []
+            options.append(option1)
+            options.append(option2)
+            options.append(option3)
+            options.append(option4)
+            options.append(option5)
+            options.append(option6)
+            options.append(option7)
+            options.append(option8)
+            options.append(option9)
+            options.append(option10)
+            options.append(option11)
+            options.append(option12)
+            options.append(option13)
+            options.append(option14)
+
+
+            for i in options:
+                print(i)
+
             print(id)
-            print(uuid)
+            print(uuid),
             print(vid)
 
 
-            update_result = await user_collection.find_one_and_update(
-                {"user_name": id},
-                {"$push": { "content_completed": f"{vid}"}, "$pull": { "content_assigned": vid}}
-            )
-            if update_result is not None:
-                return RedirectResponse("/", status_code=status.HTTP_302_FOUND)
-            else:
-                raise HTTPException(status_code=500, detail=f"Unable to add content to {id}")
-    else:
-        raise HTTPException(status_code=404, detail=f"User: {id}, not found.")
+    #         update_result = await user_collection.find_one_and_update(
+    #             {"user_name": id},
+    #             {"$push": { "content_completed": f"{vid}"}, "$pull": { "content_assigned": vid}}
+    #         )
+    #         if update_result is not None:
+    #             return RedirectResponse("/", status_code=status.HTTP_302_FOUND)
+    #         else:
+    #             raise HTTPException(status_code=500, detail=f"Unable to add content to {id}")
+    # else:
+    #     raise HTTPException(status_code=404, detail=f"User: {id}, not found.")
 
 
 
