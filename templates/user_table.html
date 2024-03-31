@@ -3,9 +3,15 @@
     <td class="border">{{user.role}}</td>
     <td class="border">{{user.user_name}}</td>
     <td class="border">{{user.email}}</td>
-    <td class="border"><ul>{%include 'content_assigned.html' %}</ul></td>
+    <td class="border">
+        <ul>            
+            {% for vid in user.content_assigned %}
+                <a href="/v/video/{{vid}}">{{vid}}</a> 
+            {% endfor %}
+        </ul>
+    </td>
     <td class="border"><ul>{% include 'content_completed.html' %}</ul></td>
-    <td class="border"><a href="/v/user/{{user.user_name}}/ac"><button class="px-3 py-1 bg-blue-400 text-white">Assign Content</button></a></td>
-    <td class="border"><button class="px-3 py-1 bg-blue-400 text-white">Reset Password</button></td>
-    <td class="border"><a href="/user/{{user.user_name}}/delete"><button class="px-3 py-1 bg-blue-400 text-white">Delete User</button></a></td>
+    <td class="border"><a href="/v/user/{{user.user_name}}/ac"><button class="bg-slate-900 hover:bg-slate-950 text-white font-bold py-2 px-4  mx-2">Assign Content</button></a></td>
+    <td class="border"><button class="bg-slate-900 hover:bg-slate-950 text-white font-bold py-2 px-4  mx-2">Reset Password</button></td>
+    <td class="border"><a href="/user/{{user.user_name}}/delete"><button class="bg-slate-900 hover:bg-slate-950 text-white font-bold py-2 px-4  mx-2">Delete User</button></a></td>
 </tr>
