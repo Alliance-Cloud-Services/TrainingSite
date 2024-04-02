@@ -1,10 +1,13 @@
-<div class="mx-4">
-    <video class="w-full" controls>
+
+<link rel="stylesheet" href="/public/video.css">
+<script src="https://cdn.tailwindcss.com/3.3.5"></script>
+<div class="center lg:border-t">
+    <video class="w-full lg:border-t" controls>
         <source src="/video/{{id}}">
     </video>
 
     <form method="post" action="/user/{{user.user_name}}/content/{{id}}/c", enctype="multipart/form-data">
         {% include 'quiz.html' %}
-        <input type="submit" value="Completed">
+        <button type="submit" class="bg-slate-900 hover:bg-slate-950 text-white font-bold py-2 px-4  mx-2 mt-2">Submit Quiz</button>
     </form>
 </div>

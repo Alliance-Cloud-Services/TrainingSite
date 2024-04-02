@@ -5,6 +5,7 @@ from fastapi.templating import Jinja2Templates
 from pydantic import ConfigDict, BaseModel, Field
 from pydantic.functional_validators import BeforeValidator
 from typing_extensions import Annotated
+from jinja2_ansible_filters.core_filters import regex_replace
 
 from bson import ObjectId
 import motor.motor_asyncio

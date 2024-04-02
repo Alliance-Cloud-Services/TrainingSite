@@ -1,8 +1,8 @@
 {% for question in quiz.questions %}
   <h1>{{question.text}}</h1>
   <ul>
-    {% for  option in question.options %}
-      <input type="checkbox" name="option{{loop.index}}" value="{{option}}">{{option}}</input>
+    {% for option in question.options %}
+      <input type="checkbox" name="{{option}}" value="{{option}}">{{option | regex_replace('Option:*', '')}}</input>
     {% endfor %}
   </ul>
 {% endfor %}

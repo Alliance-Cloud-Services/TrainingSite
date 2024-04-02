@@ -53,12 +53,12 @@ class Quiz:
                 # print(line)
                 question_search = re.search(r"Question:", line)
                 answer_search = re.search(r"Answer:", line)
-                option_search = re.search(r"Option:", line)
+                option_search = re.search(r"Option:*", line)
 
                 if question_search:
                     question.text = question_search.string.replace("Question:", "")
                 if option_search:
-                    question.options.append(option_search.string.replace("Option:", "").replace("\n", ""))
+                    question.options.append(option_search.string.replace("\n", ""))
                 if answer_search:
                     question.correct_answer = answer_search.string.replace("Answer:", "")
                 
