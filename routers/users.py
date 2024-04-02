@@ -35,6 +35,7 @@ class UserModel(BaseModel):
     user_name: str = Field(...)
     email: str = Field(...)
     password: str = Field(...)
+    admin: bool
     content_assigned: Optional[List[str]] = None
     content_completed: Optional[List[str]] = None
     quiz_scores: Optional[List[str]] = None
@@ -54,9 +55,9 @@ class UpdateUserModel(BaseModel):
 
 # Create a user.
 @router.post("/users", response_description="Create a User", response_model=UserModel, status_code=status.HTTP_201_CREATED, response_model_by_alias=False)
-async def create_user(request: Request, name: Annotated[str, Form()], role: Annotated[str, Form()], user_name:Annotated[str, Form()], email:Annotated[str, Form()], password:Annotated[str, Form()]):
+async def create_user(request: Request, name: Annotated[str, Form()], role: Annotated[str, Form()], user_name:Annotated[str, Form()], email:Annotated[str, Form()], password:Annotated[str, Form()], admin:Annotated[str, Form()] = False):
     try:
-        user: UserModel = {"name": name, "role": role, "email": email, "user_name": user_name, "email": email, "password": password, "content_assigned": [], "content_completed": [], "quiz_scores": []}
+        user: UserModel = {"name": name, "role": role, "email": email, "user_name": user_name, "email": email, "password": password, "admin": admin, "content_assigned": [], "content_completed": [], "quiz_scores": []}
         new_user = await user_collection.insert_one(user)
 
         created_user = await user_collection.find_one({"_id": new_user.inserted_id})
@@ -88,14 +89,18 @@ async def login(request: Request, response: Response, user_name:Annotated[str, F
             if user['password'] == password:
                 response = templates.TemplateResponse("index.html", context)
                 response.set_cookie(key="user", value=user['user_name'])
-                return response
-            # If the user is the admin set the admin cookie. #TODO
-            if user['user_name'] == "admin":
-                ...
+                # If the user is the admin set the admin cookie. #TODO
+                if user['admin'] == True:
+                    response.set_cookie(key="admin", value=True)
+                    return response
+                else:
+                    return response
             else:
                 context = {"request": request, "error": "Username or password is incorrect"}
                 response = templates.TemplateResponse("login.html", context)
                 return response
+            
+           
         else:
             context = {"request": request, "error": "Username or password is incorrect"}
             response = templates.TemplateResponse("login.html", context)
@@ -111,6 +116,7 @@ async def logout(request: Request, response: Response):
     context = {"request": request}
     response = RedirectResponse("/")
     response.delete_cookie("user")
+    response.delete_cookie("admin")
     return response
 
 # Assign content to a user.
@@ -134,7 +140,7 @@ async def update_user_content(id:str, vid:Annotated[str, Form()]):
     else:
         raise HTTPException(status_code=404, detail=f"User {id} not found.")
 
-# Add content to a user's completed content and score the quiz. #TODO Fix quiz scores.
+# Add content to a user's completed content and score the quiz. 
 @router.post("/user/{id}/content/vids/{uuid}/{vid}/c", response_description="Add content to a user's completed content.", response_class=HTMLResponse)
 async def update_user_content(id:str, vid:str, uuid: str, option1: Annotated[str, Form()] = None, option2: Annotated[str, Form()] = None, option3: Annotated[str, Form()] = None, option4: Annotated[str, Form()] = None, option5: Annotated[str, Form()] = None, option6: Annotated[str, Form()] = None, option7: Annotated[str, Form()] = None, option8: Annotated[str, Form()] = None, option9: Annotated[str, Form()] = None, option10: Annotated[str, Form()] = None, option11: Annotated[str, Form()] = None, option12: Annotated[str, Form()] = None, option13: Annotated[str, Form()] = None, option14: Annotated[str, Form()] = None):
     user = await user_collection.find_one(({"user_name": id}))

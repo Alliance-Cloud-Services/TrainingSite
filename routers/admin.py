@@ -21,34 +21,46 @@ vid_collection = db.get_collection("vids")
 # Admin Dashboard
 @router.get("/v/administration", response_description="Get the admin view.", response_class=HTMLResponse)
 async def get_admin_view(request: Request, user: Annotated[str | None, Cookie()] = None):
-    content = await get_videos()
-    videos = []
-    for vid in content:
-        videos.append(os.path.basename(vid))
-    users =  await user_collection.find().to_list(1000)
-    context = {"request": request, "users": users, "vids": videos}
-    return templates.TemplateResponse("admin.html", context)
+    user = await user_collection.find_one({'user_name': user})
+    if user["admin"] == True:
+        content = await get_videos()
+        videos = []
+        for vid in content:
+            videos.append(os.path.basename(vid))
+        users =  await user_collection.find().to_list(1000)
+        context = {"request": request, "users": users, "vids": videos}
+        return templates.TemplateResponse("admin.html", context)
+    else:
+        return HTTPException(status_code=401)
 
 
 # User Management
 
 @router.get("/v/create_user", response_description="View for creating a user.", response_class=HTMLResponse)
-async def create_user_view(request: Request):
-    context = {"request": request}
-    return templates.TemplateResponse("add_user.html", context)
+async def create_user_view(request: Request, user: Annotated[str | None, Cookie()] = None):
+    user = await user_collection.find_one({'user_name': user})
+    if user["admin"] == True:
+        context = {"request": request}
+        return templates.TemplateResponse("add_user.html", context)
+    else:
+        return HTTPException(status_code=401)
 
 @router.get("/v/user/{id}", response_description="Get a single user.", response_class=HTMLResponse)
-async def user_view(request: Request, id: str):
+async def user_view(request: Request, id: str, user: Annotated[str | None, Cookie()] = None):
     # Check for the admin cookie if it exists view the user.
-    user = await user_collection.find_one({"user_name": id})
-    context = {"request": request, "user": user}
-    if user is not None:
-        return templates.TemplateResponse("user.html", context)
+    viewing_user_account = await user_collection.find_one({"user_name": user})
+    if viewing_user_account["admin"] == True:
+        user = await user_collection.find_one({"user_name": id})
+        context = {"request": request, "user": user}
+        if user is not None:
+            return templates.TemplateResponse("user.html", context)
+        else:
+            raise HTTPException(status_code=404, detail=f"User {id} not found.")
     else:
-        raise HTTPException(status_code=404, detail=f"User {id} not found.")
+        return HTTPException(status_code=401)
 
 @router.get("/v/user/{id}/ac", response_description="Assign content to a user.", response_class=HTMLResponse)
-async def assign_content_view(request: Request, id:str):
+async def assign_content_view(request: Request, id:str, viewing_user: Annotated[str | None, Cookie()] = None):
     # Check for the admin cookie if it exists view the assigning content.
     user = await user_collection.find_one({"user_name": id})
     content = await get_videos()
