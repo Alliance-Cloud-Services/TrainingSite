@@ -15,7 +15,6 @@ templates = Jinja2Templates(directory="templates")
 client = motor.motor_asyncio.AsyncIOMotorClient("127.0.0.1:27017")
 db = client.train
 user_collection = db.get_collection('users')
-
 vid_collection = db.get_collection("vids")
 # Represents an ObjectId field in the database.
 # It will be represented as a `str` on the model so that it can be serialized to JSON.

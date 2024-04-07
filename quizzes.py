@@ -16,7 +16,6 @@ class Question:
             return True
         else:
             return False
-        
 class Quiz:
     def __init__(self, questions: list[Question] = None, score = 0, file = None):
         self.questions = questions
@@ -46,23 +45,19 @@ class Quiz:
             # file_split = re.split("\n", file_contents)
             # file_string = ''.join(file_split)
 
-            
             question = Question(None, [], None)
             for line in file_contents:
-                
                 # print(line)
                 question_search = re.search(r"Question:", line)
                 answer_search = re.search(r"Answer:", line)
                 option_search = re.search(r"Option:*", line)
 
                 if question_search:
-                    question.text = question_search.string.replace("Question:", "")
+                    question.text = question_search.string.replace("Question:", "").replace("\n", "")
                 if option_search:
                     question.options.append(option_search.string.replace("\n", ""))
                 if answer_search:
                     question.correct_answer = answer_search.string.replace("Answer:", "")
-                
                 if line == "\n":
                     self.questions.append(question)
                     question = Question(None, [], None)
-                    

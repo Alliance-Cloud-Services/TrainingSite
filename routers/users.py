@@ -5,7 +5,6 @@ from fastapi.templating import Jinja2Templates
 from pydantic import ConfigDict, BaseModel, Field
 from pydantic.functional_validators import BeforeValidator
 from typing_extensions import Annotated
-from jinja2_ansible_filters.core_filters import regex_replace
 
 from bson import ObjectId
 import motor.motor_asyncio
@@ -13,8 +12,7 @@ from pymongo import ReturnDocument, errors
 
 from quizzes import Quiz
 from routers.vids import get_video_by_uuid
-from datetime import datetime 
-
+from datetime import datetime
 router = APIRouter()
 templates = Jinja2Templates(directory="templates")
 
@@ -100,8 +98,6 @@ async def login(request: Request, response: Response, user_name:Annotated[str, F
                 context = {"request": request, "error": "Username or password is incorrect"}
                 response = templates.TemplateResponse("login.html", context)
                 return response
-            
-           
         else:
             context = {"request": request, "error": "Username or password is incorrect"}
             response = templates.TemplateResponse("login.html", context)
