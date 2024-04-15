@@ -9,7 +9,7 @@ import motor.motor_asyncio
 
 from routers import users, vids, admin
 
-templates = Jinja2Templates(directory="templates")
+templates = Jinja2Templates(directory="/code/app/templates")
 
 
 client = motor.motor_asyncio.AsyncIOMotorClient("127.0.0.1:27017")
@@ -21,7 +21,7 @@ vid_collection = db.get_collection("vids")
 PyObjectId = Annotated[str, BeforeValidator(str)]
 
 app = FastAPI();
-app.mount("/public", StaticFiles(directory="public"), name="public")
+app.mount("/public", StaticFiles(directory="/code/app/public"), name="public")
 app.include_router(admin.router)
 app.include_router(users.router)
 app.include_router(vids.router)
