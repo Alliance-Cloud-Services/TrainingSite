@@ -50,7 +50,7 @@ async def create_user_view(request: Request, user: Annotated[str | None, Cookie(
 async def user_view(request: Request, id: str, user: Annotated[str | None, Cookie()] = None):
     # Check for the admin cookie if it exists view the user.
     viewing_user_account = await user_collection.find_one({"user_name": user})
-    if viewing_user_account["admin"] == True:
+    if viewing_user_account["admin"] == True or "True":
         user = await user_collection.find_one({"user_name": id})
         context = {"request": request, "user": user}
         if user is not None:
