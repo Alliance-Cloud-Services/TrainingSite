@@ -22,16 +22,17 @@ vid_collection = db.get_collection("vids")
 @router.get("/v/administration", response_description="Get the admin view.", response_class=HTMLResponse)
 async def get_admin_view(request: Request, user: Annotated[str | None, Cookie()] = None):
     user = await user_collection.find_one({'user_name': user})
-    if user["admin"] == True or "True":
-        content = await get_videos()
-        videos = []
-        for vid in content:
-            videos.append(os.path.basename(vid))
-        users =  await user_collection.find().to_list(1000)
-        context = {"request": request, "users": users, "vids": videos}
-        return templates.TemplateResponse("admin.html", context)
-    else:
-        return HTTPException(status_code=401)
+    if user:
+        if user["admin"] == True or "True":
+            content = await get_videos()
+            videos = []
+            for vid in content:
+                videos.append(os.path.basename(vid))
+            users =  await user_collection.find().to_list(1000)
+            context = {"request": request, "users": users, "vids": videos}
+            return templates.TemplateResponse("admin.html", context)
+        else:
+            return HTTPException(status_code=401)
 
 
 # User Management
