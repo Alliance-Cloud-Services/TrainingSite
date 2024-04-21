@@ -108,10 +108,6 @@ async def show_video(request: Request, id:str, user: Annotated[str | None, Cooki
      video_quiz = Quiz()
      video_quiz.from_file(video.quiz)
 
-     for question in video_quiz.questions:
-         print(question.text)
-         print(question.options)
-
      user = await user_collection.find_one({"user_name": user})
      context = {"request": request, "id": video.mp4, 'user': user, 'quiz': video_quiz}
      return templates.TemplateResponse("video.html", context)

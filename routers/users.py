@@ -13,6 +13,7 @@ from pymongo import ReturnDocument, errors
 from quizzes import Quiz
 from routers.vids import get_video_by_uuid
 from datetime import datetime
+import re
 router = APIRouter()
 templates = Jinja2Templates(directory="templates")
 
@@ -139,7 +140,7 @@ async def update_user_content(id:str, vid:Annotated[str, Form()]):
 
 # Add content to a user's completed content and score the quiz. 
 @router.post("/user/{id}/content/vids/{uuid}/{vid}/c", response_description="Add content to a user's completed content.", response_class=HTMLResponse)
-async def update_user_content(id:str, vid:str, uuid: str, option1: Annotated[str, Form()] = None, option2: Annotated[str, Form()] = None, option3: Annotated[str, Form()] = None, option4: Annotated[str, Form()] = None, option5: Annotated[str, Form()] = None, option6: Annotated[str, Form()] = None, option7: Annotated[str, Form()] = None, option8: Annotated[str, Form()] = None, option9: Annotated[str, Form()] = None, option10: Annotated[str, Form()] = None, option11: Annotated[str, Form()] = None, option12: Annotated[str, Form()] = None, option13: Annotated[str, Form()] = None, option14: Annotated[str, Form()] = None):
+async def update_user_content(id:str, vid:str, uuid: str, Option1: Annotated[str, Form()] = None, Option2: Annotated[str, Form()] = None, Option3: Annotated[str, Form()] = None, Option4: Annotated[str, Form()] = None, Option5: Annotated[str, Form()] = None, Option6: Annotated[str, Form()] = None, Option7: Annotated[str, Form()] = None, Option8: Annotated[str, Form()] = None, Option9: Annotated[str, Form()] = None, Option10: Annotated[str, Form()] = None, Option11: Annotated[str, Form()] = None, Option12: Annotated[str, Form()] = None, Option13: Annotated[str, Form()] = None, Option14: Annotated[str, Form()] = None):
     user = await user_collection.find_one(({"user_name": id}))
     # Video ID + Date
     if user is not None:
@@ -150,38 +151,47 @@ async def update_user_content(id:str, vid:str, uuid: str, option1: Annotated[str
 
             # Open the video's quiz file.
             options = []
-            options.append(option1)
-            options.append(option2)
-            options.append(option3)
-            options.append(option4)
-            options.append(option5)
-            options.append(option6)
-            options.append(option7)
-            options.append(option8)
-            options.append(option9)
-            options.append(option10)
-            options.append(option11)
-            options.append(option12)
-            options.append(option13)
-            options.append(option14)
+            options.append(Option1)
+            options.append(Option2)
+            options.append(Option3)
+            options.append(Option4)
+            options.append(Option5)
+            options.append(Option6)
+            options.append(Option7)
+            options.append(Option8)
+            options.append(Option9)
+            options.append(Option10)
+            options.append(Option11)
+            options.append(Option12)
+            options.append(Option13)
+            options.append(Option14)
+
+
+
+
 
             clean_options = []
             for option in options:
                 if option is None:
                     continue
                 else:
-                    clean_options.append(option)
-                    print(option)
+                    parse_option = option.replace("Option", "").replace(":", "")
+                    clean_option = re.sub(r"\d", "", parse_option)
+                    clean_options.append(clean_option)
+                    print("Quiz Selection: ", clean_option)
 
-            print(id)
-            print(uuid),
-            print(vid)
+            #print(id)
+            #print(uuid)
+            #print(vid)
             
             video = await get_video_by_uuid(vid)
             video_quiz = Quiz()
             video_quiz.from_file(video.quiz)
 
+            for question in video_quiz.questions:
+                print("Correct Answer: ", question.correct_answer)
 
+    
             score = video_quiz.score_quiz(clean_options)
             date = datetime.now()
 

@@ -1,8 +1,8 @@
 {% for question in quiz.questions %}
-  <h1>{{question.text}}</h1>
+  <h1>{{question.text|replace('None', '')}}</h1>
   <ul>
     {% for option in question.options %}
-      <input type="checkbox" name="{{option}}" value="{{option}}">{{option | regex_replace('Option:*', '')}}</input>
+      <input type="checkbox" name="{{option[:9]|replace(':', '')|replace(' ', '')}}" value="{{option}}">{{option|replace('Option', '')}}</input>
     {% endfor %}
   </ul>
 {% endfor %}

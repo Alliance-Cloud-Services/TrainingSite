@@ -3,3 +3,5 @@ fastapi
 jinja2
 python-multipart
 aiken
+motor
+pox
