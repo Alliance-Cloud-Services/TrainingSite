@@ -39,7 +39,7 @@ class Quiz:
     def from_file(self, file):
         self.questions = []
         with open(file, "r") as quiz_file:
-            file_contents = quiz_file.readlines()
+            file_contents = quiz_file.read().splitlines()
             # file_split = re.split("\n", file_contents)
             # file_string = ''.join(file_split)
 
@@ -56,6 +56,5 @@ class Quiz:
                         question.options.append(option_search.string.replace("\n", ""))
                     if answer_search:
                         question.correct_answer = answer_search.string.replace("Answer:", "").replace("\n", "")
-                    if line == "\n":
                         self.questions.append(question)
                         question = Question(None, [], None)
