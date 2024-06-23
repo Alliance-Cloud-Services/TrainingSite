@@ -1,0 +1,1698 @@
+<style>
+    .docx-wrapper { background: gray; padding: 30px; padding-bottom: 0px; display: flex; flex-flow: column; align-items: center; } 
+    .docx-wrapper>section.docx { background: white; box-shadow: 0 0 10px rgba(0, 0, 0, 0.5); margin-bottom: 30px; }
+    .docx { color: black; }
+    section.docx { box-sizing: border-box; display: flex; flex-flow: column nowrap; position: relative; overflow: hidden; }
+    section.docx>article { margin-bottom: auto; }
+    .docx table { border-collapse: collapse; }
+    .docx table td, .docx table th { vertical-align: top; }
+    .docx p { margin: 0pt; min-height: 1em; }
+    .docx span { white-space: pre-wrap; overflow-wrap: break-word; }
+    .docx a { color: inherit; text-decoration: inherit; }
+    </style><!--docxjs document theme values--><style>.docx {
+      --docx-majorHAnsi-font: Calibri Light;
+      --docx-minorHAnsi-font: Calibri;
+      --docx-dk1-color: #000000;
+      --docx-lt1-color: #FFFFFF;
+      --docx-dk2-color: #44546A;
+      --docx-lt2-color: #E7E6E6;
+      --docx-accent1-color: #4472C4;
+      --docx-accent2-color: #ED7D31;
+      --docx-accent3-color: #A5A5A5;
+      --docx-accent4-color: #FFC000;
+      --docx-accent5-color: #5B9BD5;
+      --docx-accent6-color: #70AD47;
+      --docx-hlink-color: #0563C1;
+      --docx-folHlink-color: #954F72;
+    }
+    </style><!--docxjs document styles--><style>.docx span {
+      font-family: var(--docx-minorHAnsi-font);
+      min-height: 11.00pt;
+      font-size: 11.00pt;
+    }
+    .docx p {
+      margin-bottom: 8.00pt;
+      line-height: 1.08;
+    }
+    .docx table, table.docx_tablenormal td {
+      padding-top: 0.00pt;
+      padding-left: 5.40pt;
+      padding-bottom: 0.00pt;
+      padding-right: 5.40pt;
+    }
+    p.docx_listparagraph {
+      margin-left: 36.00pt;
+    }
+    </style><!--docxjs document numbering styles--><style>p.docx-num-7-0:before {
+      content: "\9";
+      counter-increment: docx-num-7-0;
+      font-family: Wingdings;
+      color: #000000;
+    }
+    p.docx-num-7-0 {
+      display: list-item;
+      list-style-position: inside;
+      list-style-type: none;
+      text-indent: -18.00pt;
+      margin-left: 36.00pt;
+    }
+    p.docx-num-7-0 {
+      counter-reset: docx-num-7-1;
+    }
+    p.docx-num-7-1:before {
+      content: "o\9";
+      counter-increment: docx-num-7-1;
+      font-family: Courier New;
+    }
+    p.docx-num-7-1 {
+      display: list-item;
+      list-style-position: inside;
+      list-style-type: none;
+      text-indent: -18.00pt;
+      margin-left: 72.00pt;
+    }
+    p.docx-num-7-1 {
+      counter-reset: docx-num-7-2;
+    }
+    p.docx-num-7-2:before {
+      content: "\9";
+      counter-increment: docx-num-7-2;
+      font-family: Wingdings;
+    }
+    p.docx-num-7-2 {
+      display: list-item;
+      list-style-position: inside;
+      list-style-type: none;
+      text-indent: -18.00pt;
+      margin-left: 108.00pt;
+    }
+    p.docx-num-7-2 {
+      counter-reset: docx-num-7-3;
+    }
+    p.docx-num-7-3:before {
+      content: "\9";
+      counter-increment: docx-num-7-3;
+      font-family: Symbol;
+    }
+    p.docx-num-7-3 {
+      display: list-item;
+      list-style-position: inside;
+      list-style-type: none;
+      text-indent: -18.00pt;
+      margin-left: 144.00pt;
+    }
+    p.docx-num-7-3 {
+      counter-reset: docx-num-7-4;
+    }
+    p.docx-num-7-4:before {
+      content: "o\9";
+      counter-increment: docx-num-7-4;
+      font-family: Courier New;
+    }
+    p.docx-num-7-4 {
+      display: list-item;
+      list-style-position: inside;
+      list-style-type: none;
+      text-indent: -18.00pt;
+      margin-left: 180.00pt;
+    }
+    p.docx-num-7-4 {
+      counter-reset: docx-num-7-5;
+    }
+    p.docx-num-7-5:before {
+      content: "\9";
+      counter-increment: docx-num-7-5;
+      font-family: Wingdings;
+    }
+    p.docx-num-7-5 {
+      display: list-item;
+      list-style-position: inside;
+      list-style-type: none;
+      text-indent: -18.00pt;
+      margin-left: 216.00pt;
+    }
+    p.docx-num-7-5 {
+      counter-reset: docx-num-7-6;
+    }
+    p.docx-num-7-6:before {
+      content: "\9";
+      counter-increment: docx-num-7-6;
+      font-family: Symbol;
+    }
+    p.docx-num-7-6 {
+      display: list-item;
+      list-style-position: inside;
+      list-style-type: none;
+      text-indent: -18.00pt;
+      margin-left: 252.00pt;
+    }
+    p.docx-num-7-6 {
+      counter-reset: docx-num-7-7;
+    }
+    p.docx-num-7-7:before {
+      content: "o\9";
+      counter-increment: docx-num-7-7;
+      font-family: Courier New;
+    }
+    p.docx-num-7-7 {
+      display: list-item;
+      list-style-position: inside;
+      list-style-type: none;
+      text-indent: -18.00pt;
+      margin-left: 288.00pt;
+    }
+    p.docx-num-7-7 {
+      counter-reset: docx-num-7-8;
+    }
+    p.docx-num-7-8:before {
+      content: "\9";
+      counter-increment: docx-num-7-8;
+      font-family: Wingdings;
+    }
+    p.docx-num-7-8 {
+      display: list-item;
+      list-style-position: inside;
+      list-style-type: none;
+      text-indent: -18.00pt;
+      margin-left: 324.00pt;
+    }
+    p.docx-num-3-0:before {
+      content: "\9";
+      counter-increment: docx-num-3-0;
+      font-family: Wingdings;
+    }
+    p.docx-num-3-0 {
+      display: list-item;
+      list-style-position: inside;
+      list-style-type: none;
+      text-indent: -18.00pt;
+      margin-left: 36.00pt;
+    }
+    p.docx-num-3-0 {
+      counter-reset: docx-num-3-1;
+    }
+    p.docx-num-3-1:before {
+      content: "o\9";
+      counter-increment: docx-num-3-1;
+      font-family: Courier New;
+    }
+    p.docx-num-3-1 {
+      display: list-item;
+      list-style-position: inside;
+      list-style-type: none;
+      text-indent: -18.00pt;
+      margin-left: 72.00pt;
+    }
+    p.docx-num-3-1 {
+      counter-reset: docx-num-3-2;
+    }
+    p.docx-num-3-2:before {
+      content: "\9";
+      counter-increment: docx-num-3-2;
+      font-family: Wingdings;
+    }
+    p.docx-num-3-2 {
+      display: list-item;
+      list-style-position: inside;
+      list-style-type: none;
+      text-indent: -18.00pt;
+      margin-left: 108.00pt;
+    }
+    p.docx-num-3-2 {
+      counter-reset: docx-num-3-3;
+    }
+    p.docx-num-3-3:before {
+      content: "\9";
+      counter-increment: docx-num-3-3;
+      font-family: Symbol;
+    }
+    p.docx-num-3-3 {
+      display: list-item;
+      list-style-position: inside;
+      list-style-type: none;
+      text-indent: -18.00pt;
+      margin-left: 144.00pt;
+    }
+    p.docx-num-3-3 {
+      counter-reset: docx-num-3-4;
+    }
+    p.docx-num-3-4:before {
+      content: "o\9";
+      counter-increment: docx-num-3-4;
+      font-family: Courier New;
+    }
+    p.docx-num-3-4 {
+      display: list-item;
+      list-style-position: inside;
+      list-style-type: none;
+      text-indent: -18.00pt;
+      margin-left: 180.00pt;
+    }
+    p.docx-num-3-4 {
+      counter-reset: docx-num-3-5;
+    }
+    p.docx-num-3-5:before {
+      content: "\9";
+      counter-increment: docx-num-3-5;
+      font-family: Wingdings;
+    }
+    p.docx-num-3-5 {
+      display: list-item;
+      list-style-position: inside;
+      list-style-type: none;
+      text-indent: -18.00pt;
+      margin-left: 216.00pt;
+    }
+    p.docx-num-3-5 {
+      counter-reset: docx-num-3-6;
+    }
+    p.docx-num-3-6:before {
+      content: "\9";
+      counter-increment: docx-num-3-6;
+      font-family: Symbol;
+    }
+    p.docx-num-3-6 {
+      display: list-item;
+      list-style-position: inside;
+      list-style-type: none;
+      text-indent: -18.00pt;
+      margin-left: 252.00pt;
+    }
+    p.docx-num-3-6 {
+      counter-reset: docx-num-3-7;
+    }
+    p.docx-num-3-7:before {
+      content: "o\9";
+      counter-increment: docx-num-3-7;
+      font-family: Courier New;
+    }
+    p.docx-num-3-7 {
+      display: list-item;
+      list-style-position: inside;
+      list-style-type: none;
+      text-indent: -18.00pt;
+      margin-left: 288.00pt;
+    }
+    p.docx-num-3-7 {
+      counter-reset: docx-num-3-8;
+    }
+    p.docx-num-3-8:before {
+      content: "\9";
+      counter-increment: docx-num-3-8;
+      font-family: Wingdings;
+    }
+    p.docx-num-3-8 {
+      display: list-item;
+      list-style-position: inside;
+      list-style-type: none;
+      text-indent: -18.00pt;
+      margin-left: 324.00pt;
+    }
+    p.docx-num-1-0:before {
+      content: ""counter(docx-num-1-0, decimal)".\9";
+      counter-increment: docx-num-1-0;
+    }
+    p.docx-num-1-0 {
+      display: list-item;
+      list-style-position: inside;
+      list-style-type: none;
+      text-indent: -18.00pt;
+      margin-left: 36.00pt;
+    }
+    p.docx-num-1-0 {
+      counter-reset: docx-num-1-1;
+    }
+    p.docx-num-1-1:before {
+      content: ""counter(docx-num-1-1, lower-alpha)".\9";
+      counter-increment: docx-num-1-1;
+    }
+    p.docx-num-1-1 {
+      display: list-item;
+      list-style-position: inside;
+      list-style-type: none;
+      text-indent: -18.00pt;
+      margin-left: 72.00pt;
+    }
+    p.docx-num-1-1 {
+      counter-reset: docx-num-1-2;
+    }
+    p.docx-num-1-2:before {
+      content: ""counter(docx-num-1-2, lower-roman)".\9";
+      counter-increment: docx-num-1-2;
+    }
+    p.docx-num-1-2 {
+      display: list-item;
+      list-style-position: inside;
+      list-style-type: none;
+      text-indent: -9.00pt;
+      margin-left: 108.00pt;
+    }
+    p.docx-num-1-2 {
+      counter-reset: docx-num-1-3;
+    }
+    p.docx-num-1-3:before {
+      content: ""counter(docx-num-1-3, decimal)".\9";
+      counter-increment: docx-num-1-3;
+    }
+    p.docx-num-1-3 {
+      display: list-item;
+      list-style-position: inside;
+      list-style-type: none;
+      text-indent: -18.00pt;
+      margin-left: 144.00pt;
+    }
+    p.docx-num-1-3 {
+      counter-reset: docx-num-1-4;
+    }
+    p.docx-num-1-4:before {
+      content: ""counter(docx-num-1-4, lower-alpha)".\9";
+      counter-increment: docx-num-1-4;
+    }
+    p.docx-num-1-4 {
+      display: list-item;
+      list-style-position: inside;
+      list-style-type: none;
+      text-indent: -18.00pt;
+      margin-left: 180.00pt;
+    }
+    p.docx-num-1-4 {
+      counter-reset: docx-num-1-5;
+    }
+    p.docx-num-1-5:before {
+      content: ""counter(docx-num-1-5, lower-roman)".\9";
+      counter-increment: docx-num-1-5;
+    }
+    p.docx-num-1-5 {
+      display: list-item;
+      list-style-position: inside;
+      list-style-type: none;
+      text-indent: -9.00pt;
+      margin-left: 216.00pt;
+    }
+    p.docx-num-1-5 {
+      counter-reset: docx-num-1-6;
+    }
+    p.docx-num-1-6:before {
+      content: ""counter(docx-num-1-6, decimal)".\9";
+      counter-increment: docx-num-1-6;
+    }
+    p.docx-num-1-6 {
+      display: list-item;
+      list-style-position: inside;
+      list-style-type: none;
+      text-indent: -18.00pt;
+      margin-left: 252.00pt;
+    }
+    p.docx-num-1-6 {
+      counter-reset: docx-num-1-7;
+    }
+    p.docx-num-1-7:before {
+      content: ""counter(docx-num-1-7, lower-alpha)".\9";
+      counter-increment: docx-num-1-7;
+    }
+    p.docx-num-1-7 {
+      display: list-item;
+      list-style-position: inside;
+      list-style-type: none;
+      text-indent: -18.00pt;
+      margin-left: 288.00pt;
+    }
+    p.docx-num-1-7 {
+      counter-reset: docx-num-1-8;
+    }
+    p.docx-num-1-8:before {
+      content: ""counter(docx-num-1-8, lower-roman)".\9";
+      counter-increment: docx-num-1-8;
+    }
+    p.docx-num-1-8 {
+      display: list-item;
+      list-style-position: inside;
+      list-style-type: none;
+      text-indent: -9.00pt;
+      margin-left: 324.00pt;
+    }
+    p.docx-num-9-0:before {
+      content: ""counter(docx-num-9-0, decimal)")\9";
+      counter-increment: docx-num-9-0;
+    }
+    p.docx-num-9-0 {
+      display: list-item;
+      list-style-position: inside;
+      list-style-type: none;
+      text-indent: -18.00pt;
+      margin-left: 36.00pt;
+    }
+    p.docx-num-9-0 {
+      counter-reset: docx-num-9-1;
+    }
+    p.docx-num-9-1:before {
+      content: ""counter(docx-num-9-1, lower-alpha)".\9";
+      counter-increment: docx-num-9-1;
+    }
+    p.docx-num-9-1 {
+      display: list-item;
+      list-style-position: inside;
+      list-style-type: none;
+      text-indent: -18.00pt;
+      margin-left: 72.00pt;
+    }
+    p.docx-num-9-1 {
+      counter-reset: docx-num-9-2;
+    }
+    p.docx-num-9-2:before {
+      content: ""counter(docx-num-9-2, lower-roman)".\9";
+      counter-increment: docx-num-9-2;
+    }
+    p.docx-num-9-2 {
+      display: list-item;
+      list-style-position: inside;
+      list-style-type: none;
+      text-indent: -9.00pt;
+      margin-left: 108.00pt;
+    }
+    p.docx-num-9-2 {
+      counter-reset: docx-num-9-3;
+    }
+    p.docx-num-9-3:before {
+      content: ""counter(docx-num-9-3, decimal)".\9";
+      counter-increment: docx-num-9-3;
+    }
+    p.docx-num-9-3 {
+      display: list-item;
+      list-style-position: inside;
+      list-style-type: none;
+      text-indent: -18.00pt;
+      margin-left: 144.00pt;
+    }
+    p.docx-num-9-3 {
+      counter-reset: docx-num-9-4;
+    }
+    p.docx-num-9-4:before {
+      content: ""counter(docx-num-9-4, lower-alpha)".\9";
+      counter-increment: docx-num-9-4;
+    }
+    p.docx-num-9-4 {
+      display: list-item;
+      list-style-position: inside;
+      list-style-type: none;
+      text-indent: -18.00pt;
+      margin-left: 180.00pt;
+    }
+    p.docx-num-9-4 {
+      counter-reset: docx-num-9-5;
+    }
+    p.docx-num-9-5:before {
+      content: ""counter(docx-num-9-5, lower-roman)".\9";
+      counter-increment: docx-num-9-5;
+    }
+    p.docx-num-9-5 {
+      display: list-item;
+      list-style-position: inside;
+      list-style-type: none;
+      text-indent: -9.00pt;
+      margin-left: 216.00pt;
+    }
+    p.docx-num-9-5 {
+      counter-reset: docx-num-9-6;
+    }
+    p.docx-num-9-6:before {
+      content: ""counter(docx-num-9-6, decimal)".\9";
+      counter-increment: docx-num-9-6;
+    }
+    p.docx-num-9-6 {
+      display: list-item;
+      list-style-position: inside;
+      list-style-type: none;
+      text-indent: -18.00pt;
+      margin-left: 252.00pt;
+    }
+    p.docx-num-9-6 {
+      counter-reset: docx-num-9-7;
+    }
+    p.docx-num-9-7:before {
+      content: ""counter(docx-num-9-7, lower-alpha)".\9";
+      counter-increment: docx-num-9-7;
+    }
+    p.docx-num-9-7 {
+      display: list-item;
+      list-style-position: inside;
+      list-style-type: none;
+      text-indent: -18.00pt;
+      margin-left: 288.00pt;
+    }
+    p.docx-num-9-7 {
+      counter-reset: docx-num-9-8;
+    }
+    p.docx-num-9-8:before {
+      content: ""counter(docx-num-9-8, lower-roman)".\9";
+      counter-increment: docx-num-9-8;
+    }
+    p.docx-num-9-8 {
+      display: list-item;
+      list-style-position: inside;
+      list-style-type: none;
+      text-indent: -9.00pt;
+      margin-left: 324.00pt;
+    }
+    p.docx-num-8-0:before {
+      content: ""counter(docx-num-8-0, decimal)")\9";
+      counter-increment: docx-num-8-0;
+    }
+    p.docx-num-8-0 {
+      display: list-item;
+      list-style-position: inside;
+      list-style-type: none;
+      text-indent: -18.00pt;
+      margin-left: 36.00pt;
+    }
+    p.docx-num-8-0 {
+      counter-reset: docx-num-8-1;
+    }
+    p.docx-num-8-1:before {
+      content: ""counter(docx-num-8-1, lower-alpha)".\9";
+      counter-increment: docx-num-8-1;
+    }
+    p.docx-num-8-1 {
+      display: list-item;
+      list-style-position: inside;
+      list-style-type: none;
+      text-indent: -18.00pt;
+      margin-left: 72.00pt;
+    }
+    p.docx-num-8-1 {
+      counter-reset: docx-num-8-2;
+    }
+    p.docx-num-8-2:before {
+      content: ""counter(docx-num-8-2, lower-roman)".\9";
+      counter-increment: docx-num-8-2;
+    }
+    p.docx-num-8-2 {
+      display: list-item;
+      list-style-position: inside;
+      list-style-type: none;
+      text-indent: -9.00pt;
+      margin-left: 108.00pt;
+    }
+    p.docx-num-8-2 {
+      counter-reset: docx-num-8-3;
+    }
+    p.docx-num-8-3:before {
+      content: ""counter(docx-num-8-3, decimal)".\9";
+      counter-increment: docx-num-8-3;
+    }
+    p.docx-num-8-3 {
+      display: list-item;
+      list-style-position: inside;
+      list-style-type: none;
+      text-indent: -18.00pt;
+      margin-left: 144.00pt;
+    }
+    p.docx-num-8-3 {
+      counter-reset: docx-num-8-4;
+    }
+    p.docx-num-8-4:before {
+      content: ""counter(docx-num-8-4, lower-alpha)".\9";
+      counter-increment: docx-num-8-4;
+    }
+    p.docx-num-8-4 {
+      display: list-item;
+      list-style-position: inside;
+      list-style-type: none;
+      text-indent: -18.00pt;
+      margin-left: 180.00pt;
+    }
+    p.docx-num-8-4 {
+      counter-reset: docx-num-8-5;
+    }
+    p.docx-num-8-5:before {
+      content: ""counter(docx-num-8-5, lower-roman)".\9";
+      counter-increment: docx-num-8-5;
+    }
+    p.docx-num-8-5 {
+      display: list-item;
+      list-style-position: inside;
+      list-style-type: none;
+      text-indent: -9.00pt;
+      margin-left: 216.00pt;
+    }
+    p.docx-num-8-5 {
+      counter-reset: docx-num-8-6;
+    }
+    p.docx-num-8-6:before {
+      content: ""counter(docx-num-8-6, decimal)".\9";
+      counter-increment: docx-num-8-6;
+    }
+    p.docx-num-8-6 {
+      display: list-item;
+      list-style-position: inside;
+      list-style-type: none;
+      text-indent: -18.00pt;
+      margin-left: 252.00pt;
+    }
+    p.docx-num-8-6 {
+      counter-reset: docx-num-8-7;
+    }
+    p.docx-num-8-7:before {
+      content: ""counter(docx-num-8-7, lower-alpha)".\9";
+      counter-increment: docx-num-8-7;
+    }
+    p.docx-num-8-7 {
+      display: list-item;
+      list-style-position: inside;
+      list-style-type: none;
+      text-indent: -18.00pt;
+      margin-left: 288.00pt;
+    }
+    p.docx-num-8-7 {
+      counter-reset: docx-num-8-8;
+    }
+    p.docx-num-8-8:before {
+      content: ""counter(docx-num-8-8, lower-roman)".\9";
+      counter-increment: docx-num-8-8;
+    }
+    p.docx-num-8-8 {
+      display: list-item;
+      list-style-position: inside;
+      list-style-type: none;
+      text-indent: -9.00pt;
+      margin-left: 324.00pt;
+    }
+    p.docx-num-4-0:before {
+      content: ""counter(docx-num-4-0, decimal)")\9";
+      counter-increment: docx-num-4-0;
+    }
+    p.docx-num-4-0 {
+      display: list-item;
+      list-style-position: inside;
+      list-style-type: none;
+      text-indent: -18.00pt;
+      margin-left: 36.00pt;
+    }
+    p.docx-num-4-0 {
+      counter-reset: docx-num-4-1;
+    }
+    p.docx-num-4-1:before {
+      content: ""counter(docx-num-4-1, lower-alpha)".\9";
+      counter-increment: docx-num-4-1;
+    }
+    p.docx-num-4-1 {
+      display: list-item;
+      list-style-position: inside;
+      list-style-type: none;
+      text-indent: -18.00pt;
+      margin-left: 72.00pt;
+    }
+    p.docx-num-4-1 {
+      counter-reset: docx-num-4-2;
+    }
+    p.docx-num-4-2:before {
+      content: ""counter(docx-num-4-2, lower-roman)".\9";
+      counter-increment: docx-num-4-2;
+    }
+    p.docx-num-4-2 {
+      display: list-item;
+      list-style-position: inside;
+      list-style-type: none;
+      text-indent: -9.00pt;
+      margin-left: 108.00pt;
+    }
+    p.docx-num-4-2 {
+      counter-reset: docx-num-4-3;
+    }
+    p.docx-num-4-3:before {
+      content: ""counter(docx-num-4-3, decimal)".\9";
+      counter-increment: docx-num-4-3;
+    }
+    p.docx-num-4-3 {
+      display: list-item;
+      list-style-position: inside;
+      list-style-type: none;
+      text-indent: -18.00pt;
+      margin-left: 144.00pt;
+    }
+    p.docx-num-4-3 {
+      counter-reset: docx-num-4-4;
+    }
+    p.docx-num-4-4:before {
+      content: ""counter(docx-num-4-4, lower-alpha)".\9";
+      counter-increment: docx-num-4-4;
+    }
+    p.docx-num-4-4 {
+      display: list-item;
+      list-style-position: inside;
+      list-style-type: none;
+      text-indent: -18.00pt;
+      margin-left: 180.00pt;
+    }
+    p.docx-num-4-4 {
+      counter-reset: docx-num-4-5;
+    }
+    p.docx-num-4-5:before {
+      content: ""counter(docx-num-4-5, lower-roman)".\9";
+      counter-increment: docx-num-4-5;
+    }
+    p.docx-num-4-5 {
+      display: list-item;
+      list-style-position: inside;
+      list-style-type: none;
+      text-indent: -9.00pt;
+      margin-left: 216.00pt;
+    }
+    p.docx-num-4-5 {
+      counter-reset: docx-num-4-6;
+    }
+    p.docx-num-4-6:before {
+      content: ""counter(docx-num-4-6, decimal)".\9";
+      counter-increment: docx-num-4-6;
+    }
+    p.docx-num-4-6 {
+      display: list-item;
+      list-style-position: inside;
+      list-style-type: none;
+      text-indent: -18.00pt;
+      margin-left: 252.00pt;
+    }
+    p.docx-num-4-6 {
+      counter-reset: docx-num-4-7;
+    }
+    p.docx-num-4-7:before {
+      content: ""counter(docx-num-4-7, lower-alpha)".\9";
+      counter-increment: docx-num-4-7;
+    }
+    p.docx-num-4-7 {
+      display: list-item;
+      list-style-position: inside;
+      list-style-type: none;
+      text-indent: -18.00pt;
+      margin-left: 288.00pt;
+    }
+    p.docx-num-4-7 {
+      counter-reset: docx-num-4-8;
+    }
+    p.docx-num-4-8:before {
+      content: ""counter(docx-num-4-8, lower-roman)".\9";
+      counter-increment: docx-num-4-8;
+    }
+    p.docx-num-4-8 {
+      display: list-item;
+      list-style-position: inside;
+      list-style-type: none;
+      text-indent: -9.00pt;
+      margin-left: 324.00pt;
+    }
+    p.docx-num-10-0:before {
+      content: ""counter(docx-num-10-0, decimal)")\9";
+      counter-increment: docx-num-10-0;
+      min-height: 14.00pt;
+      font-size: 14.00pt;
+    }
+    p.docx-num-10-0 {
+      display: list-item;
+      list-style-position: inside;
+      list-style-type: none;
+      text-indent: -18.00pt;
+      margin-left: 36.00pt;
+    }
+    p.docx-num-10-0 {
+      counter-reset: docx-num-10-1;
+    }
+    p.docx-num-10-1:before {
+      content: ""counter(docx-num-10-1, lower-alpha)".\9";
+      counter-increment: docx-num-10-1;
+    }
+    p.docx-num-10-1 {
+      display: list-item;
+      list-style-position: inside;
+      list-style-type: none;
+      text-indent: -18.00pt;
+      margin-left: 72.00pt;
+    }
+    p.docx-num-10-1 {
+      counter-reset: docx-num-10-2;
+    }
+    p.docx-num-10-2:before {
+      content: ""counter(docx-num-10-2, lower-roman)".\9";
+      counter-increment: docx-num-10-2;
+    }
+    p.docx-num-10-2 {
+      display: list-item;
+      list-style-position: inside;
+      list-style-type: none;
+      text-indent: -9.00pt;
+      margin-left: 108.00pt;
+    }
+    p.docx-num-10-2 {
+      counter-reset: docx-num-10-3;
+    }
+    p.docx-num-10-3:before {
+      content: ""counter(docx-num-10-3, decimal)".\9";
+      counter-increment: docx-num-10-3;
+    }
+    p.docx-num-10-3 {
+      display: list-item;
+      list-style-position: inside;
+      list-style-type: none;
+      text-indent: -18.00pt;
+      margin-left: 144.00pt;
+    }
+    p.docx-num-10-3 {
+      counter-reset: docx-num-10-4;
+    }
+    p.docx-num-10-4:before {
+      content: ""counter(docx-num-10-4, lower-alpha)".\9";
+      counter-increment: docx-num-10-4;
+    }
+    p.docx-num-10-4 {
+      display: list-item;
+      list-style-position: inside;
+      list-style-type: none;
+      text-indent: -18.00pt;
+      margin-left: 180.00pt;
+    }
+    p.docx-num-10-4 {
+      counter-reset: docx-num-10-5;
+    }
+    p.docx-num-10-5:before {
+      content: ""counter(docx-num-10-5, lower-roman)".\9";
+      counter-increment: docx-num-10-5;
+    }
+    p.docx-num-10-5 {
+      display: list-item;
+      list-style-position: inside;
+      list-style-type: none;
+      text-indent: -9.00pt;
+      margin-left: 216.00pt;
+    }
+    p.docx-num-10-5 {
+      counter-reset: docx-num-10-6;
+    }
+    p.docx-num-10-6:before {
+      content: ""counter(docx-num-10-6, decimal)".\9";
+      counter-increment: docx-num-10-6;
+    }
+    p.docx-num-10-6 {
+      display: list-item;
+      list-style-position: inside;
+      list-style-type: none;
+      text-indent: -18.00pt;
+      margin-left: 252.00pt;
+    }
+    p.docx-num-10-6 {
+      counter-reset: docx-num-10-7;
+    }
+    p.docx-num-10-7:before {
+      content: ""counter(docx-num-10-7, lower-alpha)".\9";
+      counter-increment: docx-num-10-7;
+    }
+    p.docx-num-10-7 {
+      display: list-item;
+      list-style-position: inside;
+      list-style-type: none;
+      text-indent: -18.00pt;
+      margin-left: 288.00pt;
+    }
+    p.docx-num-10-7 {
+      counter-reset: docx-num-10-8;
+    }
+    p.docx-num-10-8:before {
+      content: ""counter(docx-num-10-8, lower-roman)".\9";
+      counter-increment: docx-num-10-8;
+    }
+    p.docx-num-10-8 {
+      display: list-item;
+      list-style-position: inside;
+      list-style-type: none;
+      text-indent: -9.00pt;
+      margin-left: 324.00pt;
+    }
+    p.docx-num-5-0:before {
+      content: "\9";
+      counter-increment: docx-num-5-0;
+      font-family: Wingdings;
+    }
+    p.docx-num-5-0 {
+      display: list-item;
+      list-style-position: inside;
+      list-style-type: none;
+      text-indent: -18.00pt;
+      margin-left: 36.00pt;
+    }
+    p.docx-num-5-0 {
+      counter-reset: docx-num-5-1;
+    }
+    p.docx-num-5-1:before {
+      content: "o\9";
+      counter-increment: docx-num-5-1;
+      font-family: Courier New;
+    }
+    p.docx-num-5-1 {
+      display: list-item;
+      list-style-position: inside;
+      list-style-type: none;
+      text-indent: -18.00pt;
+      margin-left: 72.00pt;
+    }
+    p.docx-num-5-1 {
+      counter-reset: docx-num-5-2;
+    }
+    p.docx-num-5-2:before {
+      content: "\9";
+      counter-increment: docx-num-5-2;
+      font-family: Wingdings;
+    }
+    p.docx-num-5-2 {
+      display: list-item;
+      list-style-position: inside;
+      list-style-type: none;
+      text-indent: -18.00pt;
+      margin-left: 108.00pt;
+    }
+    p.docx-num-5-2 {
+      counter-reset: docx-num-5-3;
+    }
+    p.docx-num-5-3:before {
+      content: "\9";
+      counter-increment: docx-num-5-3;
+      font-family: Symbol;
+    }
+    p.docx-num-5-3 {
+      display: list-item;
+      list-style-position: inside;
+      list-style-type: none;
+      text-indent: -18.00pt;
+      margin-left: 144.00pt;
+    }
+    p.docx-num-5-3 {
+      counter-reset: docx-num-5-4;
+    }
+    p.docx-num-5-4:before {
+      content: "o\9";
+      counter-increment: docx-num-5-4;
+      font-family: Courier New;
+    }
+    p.docx-num-5-4 {
+      display: list-item;
+      list-style-position: inside;
+      list-style-type: none;
+      text-indent: -18.00pt;
+      margin-left: 180.00pt;
+    }
+    p.docx-num-5-4 {
+      counter-reset: docx-num-5-5;
+    }
+    p.docx-num-5-5:before {
+      content: "\9";
+      counter-increment: docx-num-5-5;
+      font-family: Wingdings;
+    }
+    p.docx-num-5-5 {
+      display: list-item;
+      list-style-position: inside;
+      list-style-type: none;
+      text-indent: -18.00pt;
+      margin-left: 216.00pt;
+    }
+    p.docx-num-5-5 {
+      counter-reset: docx-num-5-6;
+    }
+    p.docx-num-5-6:before {
+      content: "\9";
+      counter-increment: docx-num-5-6;
+      font-family: Symbol;
+    }
+    p.docx-num-5-6 {
+      display: list-item;
+      list-style-position: inside;
+      list-style-type: none;
+      text-indent: -18.00pt;
+      margin-left: 252.00pt;
+    }
+    p.docx-num-5-6 {
+      counter-reset: docx-num-5-7;
+    }
+    p.docx-num-5-7:before {
+      content: "o\9";
+      counter-increment: docx-num-5-7;
+      font-family: Courier New;
+    }
+    p.docx-num-5-7 {
+      display: list-item;
+      list-style-position: inside;
+      list-style-type: none;
+      text-indent: -18.00pt;
+      margin-left: 288.00pt;
+    }
+    p.docx-num-5-7 {
+      counter-reset: docx-num-5-8;
+    }
+    p.docx-num-5-8:before {
+      content: "\9";
+      counter-increment: docx-num-5-8;
+      font-family: Wingdings;
+    }
+    p.docx-num-5-8 {
+      display: list-item;
+      list-style-position: inside;
+      list-style-type: none;
+      text-indent: -18.00pt;
+      margin-left: 324.00pt;
+    }
+    p.docx-num-2-0:before {
+      content: ""counter(docx-num-2-0, decimal)".\9";
+      counter-increment: docx-num-2-0;
+    }
+    p.docx-num-2-0 {
+      display: list-item;
+      list-style-position: inside;
+      list-style-type: none;
+      text-indent: -18.00pt;
+      margin-left: 54.00pt;
+    }
+    p.docx-num-2-0 {
+      counter-reset: docx-num-2-1;
+    }
+    p.docx-num-2-1:before {
+      content: ""counter(docx-num-2-1, lower-alpha)".\9";
+      counter-increment: docx-num-2-1;
+    }
+    p.docx-num-2-1 {
+      display: list-item;
+      list-style-position: inside;
+      list-style-type: none;
+      text-indent: -18.00pt;
+      margin-left: 90.00pt;
+    }
+    p.docx-num-2-1 {
+      counter-reset: docx-num-2-2;
+    }
+    p.docx-num-2-2:before {
+      content: ""counter(docx-num-2-2, lower-roman)".\9";
+      counter-increment: docx-num-2-2;
+    }
+    p.docx-num-2-2 {
+      display: list-item;
+      list-style-position: inside;
+      list-style-type: none;
+      text-indent: -9.00pt;
+      margin-left: 126.00pt;
+    }
+    p.docx-num-2-2 {
+      counter-reset: docx-num-2-3;
+    }
+    p.docx-num-2-3:before {
+      content: ""counter(docx-num-2-3, decimal)".\9";
+      counter-increment: docx-num-2-3;
+    }
+    p.docx-num-2-3 {
+      display: list-item;
+      list-style-position: inside;
+      list-style-type: none;
+      text-indent: -18.00pt;
+      margin-left: 162.00pt;
+    }
+    p.docx-num-2-3 {
+      counter-reset: docx-num-2-4;
+    }
+    p.docx-num-2-4:before {
+      content: ""counter(docx-num-2-4, lower-alpha)".\9";
+      counter-increment: docx-num-2-4;
+    }
+    p.docx-num-2-4 {
+      display: list-item;
+      list-style-position: inside;
+      list-style-type: none;
+      text-indent: -18.00pt;
+      margin-left: 198.00pt;
+    }
+    p.docx-num-2-4 {
+      counter-reset: docx-num-2-5;
+    }
+    p.docx-num-2-5:before {
+      content: ""counter(docx-num-2-5, lower-roman)".\9";
+      counter-increment: docx-num-2-5;
+    }
+    p.docx-num-2-5 {
+      display: list-item;
+      list-style-position: inside;
+      list-style-type: none;
+      text-indent: -9.00pt;
+      margin-left: 234.00pt;
+    }
+    p.docx-num-2-5 {
+      counter-reset: docx-num-2-6;
+    }
+    p.docx-num-2-6:before {
+      content: ""counter(docx-num-2-6, decimal)".\9";
+      counter-increment: docx-num-2-6;
+    }
+    p.docx-num-2-6 {
+      display: list-item;
+      list-style-position: inside;
+      list-style-type: none;
+      text-indent: -18.00pt;
+      margin-left: 270.00pt;
+    }
+    p.docx-num-2-6 {
+      counter-reset: docx-num-2-7;
+    }
+    p.docx-num-2-7:before {
+      content: ""counter(docx-num-2-7, lower-alpha)".\9";
+      counter-increment: docx-num-2-7;
+    }
+    p.docx-num-2-7 {
+      display: list-item;
+      list-style-position: inside;
+      list-style-type: none;
+      text-indent: -18.00pt;
+      margin-left: 306.00pt;
+    }
+    p.docx-num-2-7 {
+      counter-reset: docx-num-2-8;
+    }
+    p.docx-num-2-8:before {
+      content: ""counter(docx-num-2-8, lower-roman)".\9";
+      counter-increment: docx-num-2-8;
+    }
+    p.docx-num-2-8 {
+      display: list-item;
+      list-style-position: inside;
+      list-style-type: none;
+      text-indent: -9.00pt;
+      margin-left: 342.00pt;
+    }
+    p.docx-num-6-0:before {
+      content: ""counter(docx-num-6-0, decimal)")\9";
+      counter-increment: docx-num-6-0;
+      font-family: var(--docx-minorHAnsi-font);
+    }
+    p.docx-num-6-0 {
+      display: list-item;
+      list-style-position: inside;
+      list-style-type: none;
+      text-indent: -18.00pt;
+      margin-left: 36.00pt;
+    }
+    p.docx-num-6-0 {
+      counter-reset: docx-num-6-1;
+    }
+    p.docx-num-6-1:before {
+      content: ""counter(docx-num-6-1, lower-alpha)".\9";
+      counter-increment: docx-num-6-1;
+    }
+    p.docx-num-6-1 {
+      display: list-item;
+      list-style-position: inside;
+      list-style-type: none;
+      text-indent: -18.00pt;
+      margin-left: 72.00pt;
+    }
+    p.docx-num-6-1 {
+      counter-reset: docx-num-6-2;
+    }
+    p.docx-num-6-2:before {
+      content: ""counter(docx-num-6-2, lower-roman)".\9";
+      counter-increment: docx-num-6-2;
+    }
+    p.docx-num-6-2 {
+      display: list-item;
+      list-style-position: inside;
+      list-style-type: none;
+      text-indent: -9.00pt;
+      margin-left: 108.00pt;
+    }
+    p.docx-num-6-2 {
+      counter-reset: docx-num-6-3;
+    }
+    p.docx-num-6-3:before {
+      content: ""counter(docx-num-6-3, decimal)".\9";
+      counter-increment: docx-num-6-3;
+    }
+    p.docx-num-6-3 {
+      display: list-item;
+      list-style-position: inside;
+      list-style-type: none;
+      text-indent: -18.00pt;
+      margin-left: 144.00pt;
+    }
+    p.docx-num-6-3 {
+      counter-reset: docx-num-6-4;
+    }
+    p.docx-num-6-4:before {
+      content: ""counter(docx-num-6-4, lower-alpha)".\9";
+      counter-increment: docx-num-6-4;
+    }
+    p.docx-num-6-4 {
+      display: list-item;
+      list-style-position: inside;
+      list-style-type: none;
+      text-indent: -18.00pt;
+      margin-left: 180.00pt;
+    }
+    p.docx-num-6-4 {
+      counter-reset: docx-num-6-5;
+    }
+    p.docx-num-6-5:before {
+      content: ""counter(docx-num-6-5, lower-roman)".\9";
+      counter-increment: docx-num-6-5;
+    }
+    p.docx-num-6-5 {
+      display: list-item;
+      list-style-position: inside;
+      list-style-type: none;
+      text-indent: -9.00pt;
+      margin-left: 216.00pt;
+    }
+    p.docx-num-6-5 {
+      counter-reset: docx-num-6-6;
+    }
+    p.docx-num-6-6:before {
+      content: ""counter(docx-num-6-6, decimal)".\9";
+      counter-increment: docx-num-6-6;
+    }
+    p.docx-num-6-6 {
+      display: list-item;
+      list-style-position: inside;
+      list-style-type: none;
+      text-indent: -18.00pt;
+      margin-left: 252.00pt;
+    }
+    p.docx-num-6-6 {
+      counter-reset: docx-num-6-7;
+    }
+    p.docx-num-6-7:before {
+      content: ""counter(docx-num-6-7, lower-alpha)".\9";
+      counter-increment: docx-num-6-7;
+    }
+    p.docx-num-6-7 {
+      display: list-item;
+      list-style-position: inside;
+      list-style-type: none;
+      text-indent: -18.00pt;
+      margin-left: 288.00pt;
+    }
+    p.docx-num-6-7 {
+      counter-reset: docx-num-6-8;
+    }
+    p.docx-num-6-8:before {
+      content: ""counter(docx-num-6-8, lower-roman)".\9";
+      counter-increment: docx-num-6-8;
+    }
+    p.docx-num-6-8 {
+      display: list-item;
+      list-style-position: inside;
+      list-style-type: none;
+      text-indent: -9.00pt;
+      margin-left: 324.00pt;
+    }
+    .docx-wrapper {
+      counter-reset: docx-num-7-0 docx-num-3-0 docx-num-1-0 docx-num-9-0 docx-num-8-0 docx-num-4-0 docx-num-10-0 docx-num-5-0 docx-num-2-0 docx-num-6-0;
+    }
+    </style>
+
+
+<div class="docx-wrapper">
+	<section class="docx" style="padding: 72pt; width: 612pt; min-height: 792pt;">
+		<article>
+			<p style="text-align: center;">
+				<span style="font-family: Arial; font-weight: bold; min-height: 20pt; font-size: 20pt;">
+					<div style="display: inline-block; position: relative; text-indent: 0px; width: 437.57pt; height: 166.5pt;">
+						<img style="position: relative; left: 0pt; top: 0pt; width: 439.06pt; height: 167.06pt;" src="blob:https://www.textfixer.com/f3cb72da-cb7f-44b0-a28a-9410770ca62f">
+						</div>
+					</span>
+				</p>
+				<p style="text-align: center;"></p>
+				<p style="text-align: center;"></p>
+				<p style="text-align: center;"></p>
+				<p style="text-align: center;">
+					<span style="font-weight: bold; min-height: 26pt; font-size: 26pt;">Changing Miner Fans</span>
+				</p>
+				<p style="text-align: center;">
+					<span style="font-weight: bold; min-height: 16pt; font-size: 16pt;">Quick Reference Guide                      </span>
+				</p>
+				<p style="text-align: center;"></p>
+				<p style="text-align: center;"></p>
+				<p style="text-align: center;"></p>
+				<p style="text-align: center;"></p>
+				<p style="text-align: center;"></p>
+				<p style="text-align: right;">
+					<span style="min-height: 14pt; font-size: 14pt;">0</span>
+					<span style="min-height: 14pt; font-size: 14pt;">8/29</span>
+					<span style="min-height: 14pt; font-size: 14pt;">/202</span>
+					<span style="min-height: 14pt; font-size: 14pt;">3</span>
+					<span style="min-height: 14pt; font-size: 14pt;"> – Revision</span>
+					<span style="min-height: 14pt; font-size: 14pt;"> 1</span>
+					<span style="min-height: 14pt; font-size: 14pt;"></span>
+					<span style="min-height: 14pt; font-size: 14pt;">–</span>
+					<span style="min-height: 14pt; font-size: 14pt;"></span>
+					<span style="min-height: 14pt; font-size: 14pt;">SGS</span>
+				</p>
+				<p style="text-align: right;">
+					<span style="min-height: 14pt; font-size: 14pt;">Draft Created by G</span>
+					<span style="min-height: 14pt; font-size: 14pt;">S</span>
+					<span style="min-height: 14pt; font-size: 14pt;">R</span>
+				</p>
+				<p style="text-indent: -18pt; margin-left: 54pt;"></p>
+				<p class="docx_normal" style="text-indent: -18pt; margin-left: 54pt;"></p>
+				<p></p>
+				<p>
+					<span style="font-weight: bold; min-height: 12pt; font-size: 12pt;">Documenting Work Performed</span>
+				</p>
+				<p>
+					<span style="min-height: 12pt; font-size: 12pt;">Any changes to miners in respect to repair should be documented.  </span>
+				</p>
+				<p>
+					<span style="min-height: 12pt; font-size: 12pt;">Prior to beginning any repairs on miners, refer to “QRG – Documenting Miner Changes” for the documentation and tracking involved in troubleshooting, removing, repairing, swapping out, or adding miners.</span>
+				</p>
+				<p>
+					<span style="min-height: 12pt; font-size: 12pt;">After correctly documenting the miner change to be made, in this case changing 1 or more fans, the technician can now begin the physical adjustment to the machine in question.</span>
+				</p>
+				<p>
+					<span style="font-weight: bold; min-height: 12pt; font-size: 12pt;">Repair Process</span>
+				</p>
+				<p class="docx_listparagraph docx-num-5-0">
+					<span style="min-height: 12pt; font-size: 12pt;">Be sure the miner is not running during the Fan Replacement Process.</span>
+				</p>
+				<p>
+					<span style="min-height: 12pt; font-size: 12pt;">To perform this servicing, Operations Technicians will be asked to remove the 2 lids from the top of the miner and blow out the machines with an air compressor.  Preparation of the machine requires removing 2 lids from the top of the machine, the power supply lid, and the control board lid.</span>
+				</p>
+				<p class="docx_listparagraph docx-num-4-0">
+					<span style="min-height: 12pt; font-size: 12pt;">Power Supply Lid – Remove the 2 screws on the back of the power supply as shown in </span>
+					<span style="font-style: italic; min-height: 12pt; font-size: 12pt;">Figure 1</span>
+					<span style="min-height: 12pt; font-size: 12pt;"></span>
+					<span style="min-height: 12pt; font-size: 12pt;">Below.  Slide the lid toward the front of the machine and lift upward.</span>
+				</p>
+				<p style="text-align: center;">
+					<span style="min-height: 12pt; font-size: 12pt;">
+						<div style="display: inline-block; position: relative; text-indent: 0px; width: 335.25pt; height: 252.75pt;">
+							<img style="position: relative; left: 0pt; top: 0pt; width: 335.25pt; height: 252.75pt;" src="/public/QRG/changeminerfan/changingminerfanfig1.jpg">
+							</div>
+						</span>
+					</p>
+					<p style="text-align: center;"></p>
+					<p style="text-align: center;">
+						<span style="font-style: italic; min-height: 12pt; font-size: 12pt;">Figure 1 – Miner Power Supply Lid Removal</span>
+					</p>
+					<p style="text-align: center;"></p>
+					<p class="docx_listparagraph docx-num-4-0">
+						<span style="min-height: 12pt; font-size: 12pt;">Control Board Lid – Loosen the 1 screw on the back and push the button in, then pry upward.  The lid should slide off after lifting upward – See </span>
+						<span style="font-style: italic; min-height: 12pt; font-size: 12pt;">Figure 2</span>
+						<span style="min-height: 12pt; font-size: 12pt;"> Below.</span>
+					</p>
+					<p></p>
+					<p style="text-align: center;">
+						<span style="min-height: 12pt; font-size: 12pt;">
+							<div style="display: inline-block; position: relative; text-indent: 0px; width: 322.8pt; height: 405.75pt;">
+								<img style="position: relative; left: 0pt; top: 0pt; width: 323.38pt; height: 406.48pt;" src="/public/QRG/changeminerfan/changingminerfanfig2.jpg">
+								</div>
+							</span>
+						</p>
+						<p style="text-align: center;"></p>
+						<p style="text-align: center;">
+							<span style="font-style: italic; min-height: 12pt; font-size: 12pt;">Figure 2 – Miner Control Board Lid Removal</span>
+						</p>
+						<p></p>
+						<p style="text-align: center;"></p>
+						<p></p>
+						<p></p>
+						<p class="docx_listparagraph docx-num-4-0">
+							<span style="min-height: 12pt; font-size: 12pt;">Use the Antminer Root API to select which </span>
+							<span style="min-height: 12pt; font-size: 12pt;">Fan is having issues.  The Root API and the Hardware (HW) pinouts do not match.  The chart in </span>
+							<span style="font-style: italic; min-height: 12pt; font-size: 12pt;">Figure 3</span>
+							<span style="min-height: 12pt; font-size: 12pt;"> below needs to be used to determine which fan requires changing.  </span>
+						</p>
+						<p>
+							<span style="min-height: 12pt; font-size: 12pt;">
+								<div style="display: inline-block; position: relative; text-indent: 0px; width: 467.25pt; height: 171.75pt;">
+									<img style="position: relative; left: 0pt; top: 0pt; width: 467.25pt; height: 171.75pt;" src="/public/QRG/changeminerfan/changingminerfanfig3.jpg">
+									</div>
+								</span>
+							</p>
+							<p></p>
+							<p style="text-align: center;">
+								<span style="font-style: italic; min-height: 12pt; font-size: 12pt;">Figure 3 – Antminer API Fans and the Corresponding Antminer Hardware Pinouts</span>
+							</p>
+							<p></p>
+							<p>
+								<span style="min-height: 12pt; font-size: 12pt;">For Example: If the API for </span>
+								<span style="min-height: 12pt; font-size: 12pt;">a machine</span>
+								<span style="min-height: 12pt; font-size: 12pt;"> shows Fan 3 has an issue</span>
+								<span style="min-height: 12pt; font-size: 12pt;"> like shown in Figure 4 Below</span>
+								<span style="min-height: 12pt; font-size: 12pt;">, the correct pinout to be changed within the miner is Pinout 4.  </span>
+							</p>
+							<p></p>
+							<p style="text-align: center;">
+								<span style="color: rgb(255, 0, 0); min-height: 12pt; font-size: 12pt;">
+									<div style="display: inline-block; position: relative; text-indent: 0px; width: 444.66pt; height: 206.2pt;">
+										<img style="position: relative; left: 0pt; top: 0pt; width: 446.34pt; height: 206.98pt;" src="/public/QRG/changeminerfan/changingminerfanfig4.jpg">
+										</div>
+									</span>
+								</p>
+								<p style="text-align: center;"></p>
+								<p style="text-align: center;">
+									<span style="font-style: italic; min-height: 12pt; font-size: 12pt;">Figure 4 – Miner API showing Fan 3 Issue</span>
+								</p>
+								<p>
+									<span style="min-height: 12pt; font-size: 12pt;">See </span>
+									<span style="font-style: italic; min-height: 12pt; font-size: 12pt;">Figure </span>
+									<span style="font-style: italic; min-height: 12pt; font-size: 12pt;">5</span>
+									<span style="min-height: 12pt; font-size: 12pt;"> Below for the HW Pinout Number Assignments within the miner (they are written on the Control Board with very small text).</span>
+								</p>
+								<p></p>
+								<p>
+									<span style="color: rgb(255, 0, 0); min-height: 12pt; font-size: 12pt;">FIGURE 5 Add Photo of Pinouts labeled</span>
+								</p>
+								<p></p>
+								<p style="text-align: center;">
+									<span style="font-style: italic; min-height: 12pt; font-size: 12pt;">Figure </span>
+									<span style="font-style: italic; min-height: 12pt; font-size: 12pt;">5</span>
+									<span style="font-style: italic; min-height: 12pt; font-size: 12pt;"> – HW Pinout Assignments within Miners</span>
+								</p>
+								<p></p>
+								<p></p>
+								<p class="docx_listparagraph docx-num-4-0">
+									<span style="min-height: 12pt; font-size: 12pt;">After determining the correct fan to remove, remove the connector from the control board as shown in </span>
+									<span style="font-style: italic; min-height: 12pt; font-size: 12pt;">Figure </span>
+									<span style="font-style: italic; min-height: 12pt; font-size: 12pt;">6</span>
+									<span style="min-height: 12pt; font-size: 12pt;"> Below.</span>
+								</p>
+								<p class="docx_listparagraph"></p>
+								<p class="docx_listparagraph" style="text-align: center;">
+									<span style="min-height: 12pt; font-size: 12pt;">
+										<div style="display: inline-block; position: relative; text-indent: 0px; width: 330pt; height: 297pt;">
+											<img style="position: relative; left: 0pt; top: 0pt; width: 330pt; height: 297pt;" src="/public/QRG/changeminerfan/changingminerfanfig5.jpg">
+											</div>
+										</span>
+									</p>
+									<p class="docx_listparagraph"></p>
+									<p style="text-align: center;">
+										<span style="font-style: italic; min-height: 12pt; font-size: 12pt;">Figure </span>
+										<span style="font-style: italic; min-height: 12pt; font-size: 12pt;">6</span>
+										<span style="font-style: italic; min-height: 12pt; font-size: 12pt;"> – Removing Fan Connector</span>
+									</p>
+									<p style="text-align: center;"></p>
+									<p style="text-align: center;"></p>
+									<p style="text-align: center;"></p>
+									<p class="docx_listparagraph docx-num-4-0">
+										<span style="min-height: 12pt; font-size: 12pt;">Depending on which fan being changed, select the 4</span>
+										<span style="min-height: 12pt; font-size: 12pt;"> screws holding the fan cover</span>
+										<span style="min-height: 12pt; font-size: 12pt;">.  An example of this is shown in </span>
+										<span style="font-style: italic; min-height: 12pt; font-size: 12pt;">Figure 7</span>
+										<span style="min-height: 12pt; font-size: 12pt;"> Below for changing the Back Top Fan.</span>
+									</p>
+									<p class="docx_listparagraph"></p>
+									<p style="text-align: center;">
+										<span style="min-height: 12pt; font-size: 12pt;">
+											<div style="display: inline-block; position: relative; text-indent: 0px; width: 420pt; height: 371.25pt;">
+												<img style="position: relative; left: 0pt; top: 0pt; width: 420pt; height: 371.25pt;" src="/public/QRG/changeminerfan/changingminerfanfig6.jpg">
+												</div>
+											</span>
+										</p>
+										<p style="text-align: center;"></p>
+										<p style="text-align: center;">
+											<span style="font-style: italic; min-height: 12pt; font-size: 12pt;">Figure 7 – Changing the Back Top Fan</span>
+										</p>
+										<p style="text-align: center;"></p>
+										<p class="docx_listparagraph docx-num-4-0">
+											<span style="min-height: 12pt; font-size: 12pt;">Remove the fan completely from the machine (You may need to cut one or more zip ties which hold the wires in place).</span>
+										</p>
+										<p></p>
+										<p></p>
+										<p></p>
+										<p></p>
+										<p class="docx_listparagraph docx-num-4-0">
+											<span style="min-height: 12pt; font-size: 12pt;">Take a known working fan and replace the fan you have removed.  </span>
+											<span style="min-height: 12pt; font-size: 12pt;">When replacing ensure that the fan’s logo is facing the correct </span>
+											<span style="min-height: 12pt; font-size: 12pt;">direction.</span>
+											<span style="min-height: 12pt; font-size: 12pt;">  Be sure that the fan grill guard (Shown in </span>
+											<span style="font-style: italic; min-height: 12pt; font-size: 12pt;">Figure 8</span>
+											<span style="min-height: 12pt; font-size: 12pt;">) is replaced and that it is not </span>
+											<span style="min-height: 12pt; font-size: 12pt;">contacting</span>
+											<span style="min-height: 12pt; font-size: 12pt;"> the fan when adding the new fan (it has a concave which should have its ar</span>
+											<span style="min-height: 12pt; font-size: 12pt;">c</span>
+											<span style="min-height: 12pt; font-size: 12pt;"> away from the fan blades).  Screw the 4 long screws through the guard and fan into the machine case.</span>
+										</p>
+										<p class="docx_listparagraph">
+											<span style="min-height: 12pt; font-size: 12pt;"></span>
+										</p>
+										<p class="docx_listparagraph docx-num-5-0">
+											<span style="min-height: 12pt; font-size: 12pt;">Note: </span>
+											<span style="min-height: 12pt; font-size: 12pt;">The </span>
+											<span style="min-height: 12pt; font-size: 12pt;">Logo</span>
+											<span style="min-height: 12pt; font-size: 12pt;"></span>
+											<span style="min-height: 12pt; font-size: 12pt;">Sticker </span>
+											<span style="min-height: 12pt; font-size: 12pt;">should </span>
+											<span style="min-height: 12pt; font-size: 12pt;">be facing into the machine on the front and away from the machine in the back.  Air flows from front to back and the sticker is the side that air is exiting the fan.  See </span>
+											<span style="font-style: italic; min-height: 12pt; font-size: 12pt;">Figures </span>
+											<span style="font-style: italic; min-height: 12pt; font-size: 12pt;">9</span>
+											<span style="font-style: italic; min-height: 12pt; font-size: 12pt;"> and </span>
+											<span style="font-style: italic; min-height: 12pt; font-size: 12pt;">10</span>
+											<span style="min-height: 12pt; font-size: 12pt;"></span>
+											<span style="min-height: 12pt; font-size: 12pt;">on the following page </span>
+											<span style="min-height: 12pt; font-size: 12pt;">for correctly attached fan examples.</span>
+										</p>
+										<p></p>
+										<p style="text-align: center;">
+											<span style="min-height: 12pt; font-size: 12pt;">
+												<div style="display: inline-block; position: relative; text-indent: 0px; width: 344.06pt; height: 318.95pt;">
+													<img style="position: relative; left: 0pt; top: 0pt; width: 344.39pt; height: 319.26pt;" src="/public/QRG/changeminerfan/changingminerfanfig7.jpg">
+													</div>
+												</span>
+											</p>
+											<p style="text-align: center;"></p>
+											<p style="text-align: center;">
+												<span style="min-height: 12pt; font-size: 12pt;">Figure 8 – Fan Grill Guard with 4 Long Screws</span>
+											</p>
+											<p style="margin-left: 18pt; text-align: center;">
+												<span style="min-height: 12pt; font-size: 12pt;">
+													<div style="display: inline-block; position: relative; text-indent: 0px; width: 273.9pt; height: 260.45pt;">
+														<img style="position: relative; left: 0pt; top: 0pt; width: 274.93pt; height: 261.43pt;" src="/public/QRG/changeminerfan/changingminerfanfig8.jpg">
+														</div>
+													</span>
+												</p>
+												<p style="margin-left: 18pt; text-align: center;"></p>
+												<p style="margin-left: 18pt; text-align: center;">
+													<span style="font-style: italic; min-height: 12pt; font-size: 12pt;">Figure </span>
+													<span style="font-style: italic; min-height: 12pt; font-size: 12pt;">9</span>
+													<span style="min-height: 12pt; font-size: 12pt;"> – Front of Machine: Stickers on fans facing into the machine (not visible)</span>
+												</p>
+												<p class="docx_listparagraph" style="margin-left: 54pt; text-align: center;">
+													<span>
+														<div style="display: inline-block; position: relative; text-indent: 0px; width: 226.24pt; height: 250.5pt;">
+															<img style="position: relative; left: 0pt; top: 0pt; width: 226.24pt; height: 250.5pt;" src="/public/QRG/changeminerfan/changingminerfanfig9.jpg">
+															</div>
+														</span>
+													</p>
+													<p class="docx_listparagraph" style="margin-left: 54pt; text-align: center;"></p>
+													<p class="docx_listparagraph" style="margin-left: 54pt; text-align: center;"></p>
+													<p class="docx_listparagraph" style="margin-left: 54pt; text-align: center;">
+														<span style="font-style: italic; min-height: 12pt; font-size: 12pt;">Figure </span>
+														<span style="font-style: italic; min-height: 12pt; font-size: 12pt;">10</span>
+														<span style="min-height: 12pt; font-size: 12pt;"> – Back of Machine: Stickers on fans facing away from machine (visible)</span>
+													</p>
+													<p class="docx_listparagraph docx-num-4-0">
+														<span style="min-height: 12pt; font-size: 12pt;">After the fan has been added to the machine, power on the machine and check within the Antminer API to be sure that the fan is now functioning. </span>
+													</p>
+													<p class="docx_listparagraph"></p>
+													<p class="docx_listparagraph docx-num-5-0">
+														<span style="min-height: 12pt; font-size: 12pt;">Note: </span>
+														<span style="min-height: 12pt; font-size: 12pt;"> Sometimes changing the other of the 2 fans on the same side of the machine is necessary to correct the issue (it is still uncertain why this is required). </span>
+													</p>
+													<p class="docx_listparagraph"></p>
+													<p class="docx_listparagraph docx-num-4-0">
+														<span style="min-height: 12pt; font-size: 12pt;">After verifying that the machine is functioning, power down the machine.   </span>
+														<span style="min-height: 12pt; font-size: 12pt;">Place the larger lid on top of the fan making sure to move the fan wires to their correct location</span>
+														<span style="min-height: 12pt; font-size: 12pt;"> as shown in </span>
+														<span style="font-style: italic; min-height: 12pt; font-size: 12pt;">Figures 11 and 12 </span>
+														<span style="min-height: 12pt; font-size: 12pt;">Below</span>
+														<span style="min-height: 12pt; font-size: 12pt;">. </span>
+														<span style="min-height: 12pt; font-size: 12pt;">  S</span>
+														<span style="min-height: 12pt; font-size: 12pt;">crew the small screw </span>
+														<span style="min-height: 12pt; font-size: 12pt;">on the Control Board Lid </span>
+														<span style="min-height: 12pt; font-size: 12pt;">until the lid tightens.</span>
+														<span style="min-height: 12pt; font-size: 12pt;"></span>
+													</p>
+													<p class="docx_listparagraph"></p>
+													<p style="text-align: center;">
+														<span style="min-height: 12pt; font-size: 12pt;">
+															<div style="display: inline-block; position: relative; text-indent: 0px; width: 326.96pt; height: 172.8pt;">
+																<img style="position: relative; left: 0pt; top: 0pt; width: 328.25pt; height: 173.48pt;" src="/public/QRG/changeminerfan/changingminerfanfig10.jpg">
+																</div>
+															</span>
+															<span style="min-height: 12pt; font-size: 12pt;">
+																<br>
+																</span>
+															</p>
+															<p style="margin-left: 18pt; text-align: center;">
+																<span style="font-style: italic; min-height: 12pt; font-size: 12pt;">Figure 11 – Font View: Fan Wires and Lid</span>
+															</p>
+															<p style="margin-left: 18pt; text-align: center;"></p>
+															<p style="text-align: center;">
+																<span style="min-height: 12pt; font-size: 12pt;">
+																	<div style="display: inline-block; position: relative; text-indent: 0px; width: 321.74pt; height: 162.16pt;">
+																		<img style="position: relative; left: 0pt; top: 0pt; width: 322.21pt; height: 162.39pt;" src="/public/QRG/changeminerfan/changingminerfanfig11.jpg">
+																		</div>
+																	</span>
+																</p>
+																<p style="text-align: center;"></p>
+																<p style="text-align: center;">
+																	<span style="min-height: 12pt; font-size: 12pt;">Figure 12 – Rear View: Fan Wires and Lid</span>
+																</p>
+																<p class="docx_listparagraph docx-num-4-0">
+																	<span style="min-height: 12pt; font-size: 12pt;">To replace the lids of the miner, be extremely careful when putting back on the control board lid and power supply lids.  There are cables that have designated pass through areas on the metal lids.</span>
+																</p>
+																<p class="docx_listparagraph"></p>
+																<p class="docx_listparagraph">
+																	<span style="min-height: 12pt; font-size: 12pt;">Replacing the Control Board Lid requires lining up the front of the lid with the front facing plate as shown in </span>
+																	<span style="font-style: italic; min-height: 12pt; font-size: 12pt;">Figure 13</span>
+																	<span style="min-height: 12pt; font-size: 12pt;"> Below at a 30-degree angle and then sliding toward the front and pushing down.  Pay special attention to the fan cables running parallel to the lid and near the Power Supply Unit.</span>
+																</p>
+																<p class="docx_listparagraph"></p>
+																<p class="docx_listparagraph">
+																	<span style="min-height: 12pt; font-size: 12pt;">
+																		<div style="display: inline-block; position: relative; text-indent: 0px; width: 467.25pt; height: 289.5pt;">
+																			<img style="position: relative; left: 0pt; top: 0pt; width: 467.25pt; height: 289.5pt;" src="/public/QRG/changeminerfan/changingminerfanfig12.jpg">
+																			</div>
+																		</span>
+																	</p>
+																	<p style="text-align: center;"></p>
+																	<p style="text-align: center;">
+																		<span style="font-style: italic; min-height: 12pt; font-size: 12pt;">Figure 13 – Replacing the Control Board Lid of the Miner</span>
+																	</p>
+																	<p style="text-align: center;"></p>
+																	<p style="text-align: center;"></p>
+																	<p style="text-align: center;"></p>
+																	<p style="text-align: center;"></p>
+																	<p style="text-align: center;"></p>
+																	<p style="text-align: center;"></p>
+																	<p class="docx_listparagraph docx-num-4-0">
+																		<span style="min-height: 12pt; font-size: 12pt;">Replacing the Lid of the Power Supply </span>
+																		<span style="min-height: 12pt; font-size: 12pt;">(PSU) </span>
+																		<span style="min-height: 12pt; font-size: 12pt;">requires lining up the 2 notches on the underside of the lid with the top of the Power Supply and sliding toward the front of the machine</span>
+																		<span style="min-height: 12pt; font-size: 12pt;"> as shown in </span>
+																		<span style="font-style: italic; min-height: 12pt; font-size: 12pt;">Figure 14</span>
+																		<span style="min-height: 12pt; font-size: 12pt;"> Below.</span>
+																		<span style="min-height: 12pt; font-size: 12pt;"></span>
+																	</p>
+																	<p class="docx_listparagraph"></p>
+																	<p class="docx_listparagraph docx-num-5-0">
+																		<span style="min-height: 12pt; font-size: 12pt;">Note: While sliding the lid on, pay special attention to the 2 fan cables that have a premade notch location on the lid.</span>
+																	</p>
+																	<p></p>
+																	<p style="text-align: center;">
+																		<span style="font-style: italic; min-height: 12pt; font-size: 12pt;">
+																			<div style="display: inline-block; position: relative; text-indent: 0px; width: 432.57pt; height: 336.75pt;">
+																				<img style="position: relative; left: 0pt; top: 0pt; width: 432.73pt; height: 336.88pt;" src="/public/QRG/changeminerfan/changingminerfanfig13.jpg">
+																				</div>
+																			</span>
+																		</p>
+																		<p style="text-align: center;"></p>
+																		<p style="text-align: center;">
+																			<span style="font-style: italic; min-height: 12pt; font-size: 12pt;">Figure 14 – Replacing the Control Lid of the Power Supply Unit</span>
+																		</p>
+																		<p></p>
+																		<p class="docx_listparagraph docx-num-4-0">
+																			<span style="min-height: 12pt; font-size: 12pt;">Be sure to add and screw in the 2 screws to the PSU lid and the 1 screw to the Control Board lid.</span>
+																		</p>
+																	</article>
+																</section>
+															</div>

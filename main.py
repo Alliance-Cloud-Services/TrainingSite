@@ -7,7 +7,7 @@ from jinja2 import Template
 from pydantic import BeforeValidator
 import motor.motor_asyncio
 
-from routers import users, vids, admin
+from routers import users, vids, admin, qrg
 
 templates = Jinja2Templates(directory="templates")
 
@@ -25,6 +25,7 @@ app.mount("/public", StaticFiles(directory="public"), name="public")
 app.include_router(admin.router)
 app.include_router(users.router)
 app.include_router(vids.router)
+app.include_router(qrg.router)
 
 
 @ app.get("/", response_description="Get the homepage.", response_class=HTMLResponse)
